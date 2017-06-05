@@ -1,0 +1,16 @@
+<div class="m-upload">
+    <div>{content}</div>
+    <div on-click={this.fileSelect()}>
+        {#if this.$body}
+            {#inc this.$body}
+        {#else}
+            <a class="u-btn">{title || this.$trans('UPLOAD')}</a>
+        {/if}
+    </div>
+    <form method="POST" action={url} target="iframe{_id}" enctype={contentType} ref="form">
+        <input type="file" name={name} ref="file" r-hide={true} on-change={this.fileUpload()}>
+        {#list Object.keys(data) as key}
+            <input type="hidden" name={key} value={data[key]}>
+        {/list}
+    </form>
+</div>
