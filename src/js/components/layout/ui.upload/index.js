@@ -7,7 +7,7 @@
 
 var  Component = require('../../../ui-base/component');
 var  _ = require('../../../ui-base/_');
-var  upload = require('./utils');
+var  FileUnit = require('./components/file.unit');
 var  tpl = require('./index.html');
 
 /**
@@ -41,11 +41,11 @@ var UIUpload = Component.extend({
         this.supr(data);
     },
     
-    fileSelect: function() {
+    fileDialogOpen: function() {
         this.$refs.file.click();
     },
     
-    fileUpload: function() {
+    fileSelect: function() {
         var data = this.data,
             files = this.$refs.file.files,
             index = 0,
@@ -56,7 +56,12 @@ var UIUpload = Component.extend({
         
         for (; index < len; index++) {
             file = files[index];
-            upload(data.action, file, options);
+            new FileUnit({
+                data: {
+                    file: file,
+                    options: options
+                }
+            }).$inject('#filelist');
         }
     },
     

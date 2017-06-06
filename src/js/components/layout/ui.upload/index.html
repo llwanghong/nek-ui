@@ -1,6 +1,6 @@
 <div class="m-upload">
-    <div>{content}</div>
-    <div on-click={this.fileSelect()}>
+    <ul id="filelist"></ul>
+    <div on-click={this.fileDialogOpen()}>
         {#if this.$body}
             {#inc this.$body}
         {#else}
@@ -8,7 +8,7 @@
         {/if}
     </div>
     <form method="POST" action={url} target="iframe{_id}" enctype={contentType} ref="form">
-        <input type="file" name={name} ref="file" r-hide={true} on-change={this.fileUpload()}>
+        <input type="file" name={name} ref="file" r-hide={true} on-change={this.fileSelect()}>
         {#list Object.keys(data) as key}
             <input type="hidden" name={key} value={data[key]}>
         {/list}
