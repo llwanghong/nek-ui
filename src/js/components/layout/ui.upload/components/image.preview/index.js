@@ -6,8 +6,8 @@
 
 'use strict';
 
-var  Component = require('../../../ui-base/component');
-var  _ = require('../../../ui-base/_');
+var Component = require('../../../../../ui-base/component');
+var _ = require('../../../../../ui-base/_');
 var  tpl = require('./index.html');
 
 var ImagePreview = Component.extend({
@@ -22,6 +22,15 @@ var ImagePreview = Component.extend({
     },
     init: function (data) {
         this.supr(data);
+    },
+    onClose: function() {
+        this.destroy();    
+    },
+    onPrev: function() {
+        
+    },
+    onNext: function() {
+        
     }
 });
 

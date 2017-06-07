@@ -8,6 +8,7 @@
 var  Component = require('../../../ui-base/component');
 var  _ = require('../../../ui-base/_');
 var  FileUnit = require('./components/file.unit');
+var  ImagePreview = require('./components/image.preview');
 var  tpl = require('./index.html');
 
 /**
@@ -73,18 +74,9 @@ var UIUpload = Component.extend({
         
         for (; index < len; index++) {
             file = files[index];
-            fileunit = new FileUnit({
-                data: {
-                    file: file,
-                    options: options
-                }
-            });
-            fileunit.$on('delete', function () {
-               this.destroy();    
-               self.updateFileList();
-            });
-            fileunit.$on('$destroy', function() {
-                this.destroyed = true;
+            fileunit = this.createFileUnit({
+                file: file,
+                options: options
             });
             data.fileList.push({
                 inst: fileunit
@@ -92,6 +84,27 @@ var UIUpload = Component.extend({
         }
         
         this.updateFileList();
+    },
+    
+    createFileUnit: function(data) {
+        var self = this,
+            imagePreview = this.$refs.imagepreview,
+            fileunit = new FileUnit({ data: data });
+        
+        fileunit.$on('preview', function() {
+            new ImagePreview().$inject(imagePreview);
+        });
+        
+        fileunit.$on('delete', function () {
+            this.destroy();
+            self.updateFileList();
+        });
+        
+        fileunit.$on('$destroy', function() {
+            this.destroyed = true;
+        });
+        
+        return fileunit;
     },
 
     updateFileList: function() {

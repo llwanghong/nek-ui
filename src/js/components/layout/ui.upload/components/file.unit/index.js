@@ -24,7 +24,7 @@ var FileUnit = Component.extend({
         _.extend(data, {
             info: '上传失败',
             status: '',
-            delConfirm: true
+            delConfirm: false
         });
 
         this.initData(data);
@@ -107,6 +107,10 @@ var FileUnit = Component.extend({
         } else {
             self.$emit('delete');
         }
+    },
+    
+    onPreview: function() {
+        this.$emit('preview', {});
     }
 });
 

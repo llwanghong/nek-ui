@@ -1,6 +1,27 @@
 <div class="m-image-preview">
-    <ul class="m-image-list">
-        {#list imgList as img}
-        {/list}
-    </ul>
+    <div class="m-panel-wrapper">
+        <div class="m-panel-close" on-click={this.onClose()}></div>
+        <div class="m-full-panel">
+            <ul class="m-image-list">
+                <span class="u-pre-btn" on-click={this.onPrev()}><i class="u-icon"></i></span>
+                {#list imgList as img}
+                    <li class="m-image-item"><img src={current.src} alt={current.name}/></li>
+                {/list}
+                <span class="u-next-btn" on-click={this.onNext()}><i class="u-icon"></i></span>
+            </ul>
+            <ul class="m-btn-group">
+                {#list opList as op}
+                    <li></li>
+                {/list}
+            </ul>
+        </div>
+        <div class="m-thumbnail-panel">
+            <div class="u-image-name">{current.name}</div>
+            <ul class="m-image-list">
+                {#list imgList as img}
+                    <li class="m-image-item"><img src={current.src} alt={current.name}/></li>
+                {/list}
+            </ul>
+        </div>
+    </div>
 </div>

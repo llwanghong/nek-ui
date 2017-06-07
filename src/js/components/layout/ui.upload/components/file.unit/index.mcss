@@ -18,6 +18,7 @@ $unit-length = 50;
             max-width: 100%;
             max-height: 100%;
             vertical-align: middle;
+            cursor: pointer;
         }
         .u-txt {
             display: inline-block;
@@ -127,17 +128,16 @@ $unit-length = 50;
             }
         }
         .m-delete {
-            position: relative;
             display: none;
+            position: absolute;
+            right: -6px;
+            top: -6px;
             width: 17px;
             height: 17px;
             background: #333;
             background-color: rgba(0, 0, 0, 0.8);
             box-shadow: 0 0 1px 0;
             border-radius: 100px;
-            position: absolute;
-            right: -6px;
-            top: -6px;
             z-index: 5;
             &:before, &:after {
                 content: "";
