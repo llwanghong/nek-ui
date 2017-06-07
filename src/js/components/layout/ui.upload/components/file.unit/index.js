@@ -58,8 +58,14 @@ var FileUnit = Component.extend({
             return 'DOC';
         } else if (/text\/plain/.test(type)) {
             return 'TEXT';
+        } else if (/text\/html/.test(type)) {
+            return 'HTML';
+        } else if (/application\/pdf/.test(type)) {
+            return 'PDF';
+        } else if (/application\/javascript/.test(type)) {
+            return 'JS';
         }
-        
+
         if (type === '') {
             if (/zip|rar|gz/i.test(name)) {
                 return 'ZIP';
