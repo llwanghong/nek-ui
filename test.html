@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <link href="/dist/css/nek-ui.default.css" rel="stylesheet"></link>
+</head>
+<body>
+<div id="app"></div>
+</body>
+<script src="/dist/vendor/regular.js"></script>
+<script src="/dist/js/nek-ui.js"></script>
+<script>
+    var component = new NEKUI.Component({
+        template: `<div style="width:30%"><ui.upload ></ui.upload></div>`,
+        data: {
+        }
+    }).$inject('#app');
+</script>
+</html>

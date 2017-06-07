@@ -1,16 +1,16 @@
 <div class="m-upload">
-    <ul id="filelist"></ul>
-    <div on-click={this.fileDialogOpen()}>
-        {#if this.$body}
-            {#inc this.$body}
-        {#else}
-            <a class="u-btn">{title || this.$trans('UPLOAD')}</a>
-        {/if}
-    </div>
+    <ul ref="fileswrapper" class="m-filelist" r-style={{width: fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1) + 'px'}}></ul>
     <form method="POST" action={url} target="iframe{_id}" enctype={contentType} ref="form">
-        <input type="file" name={name} ref="file" r-hide={true} on-change={this.fileSelect()}>
+        <input type="file" name={name} ref="file" multiple={multiple ? 'multiple' : ''} r-hide={true} on-change={this.fileSelect()}>
         {#list Object.keys(data) as key}
             <input type="hidden" name={key} value={data[key]}>
         {/list}
     </form>
+    <li ref="inputwrapper" class="u-input-wrapper" on-click={this.fileDialogOpen()} r-hide={true}>
+        {#if this.$body}
+            {#inc this.$body}
+        {#else}
+            <div class="u-input-btn">上传图片</div>
+        {/if}
+    </li>
 </div>

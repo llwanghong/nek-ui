@@ -31,14 +31,30 @@ var UIUpload = Component.extend({
             multiple: false,
             drag: false,
             accept: '*',
-            data: {}
+            data: {},
+            numLimit: 10,
+            numPerline: 3
+        });
+        
+        _.extend(data, {
+            fileList: [],
+            fileUnitWidth: 50,
+            fileUnitMargin: 25,
         });
         
         this.supr(data);
     },
     
     init: function(data) {
+        this.initData();
         this.supr(data);
+    },
+
+    initData: function() {
+        var inputWrapper = this.data.inputWrapper = this.$refs.inputwrapper;
+        var filesWrapper = this.data.filesWrapper = this.$refs.fileswrapper;
+        filesWrapper.appendChild(inputWrapper);
+        inputWrapper.style.display = "inline-block";
     },
     
     fileDialogOpen: function() {
@@ -46,22 +62,102 @@ var UIUpload = Component.extend({
     },
     
     fileSelect: function() {
-        var data = this.data,
+        var self = this,
+            data = this.data,
             files = this.$refs.file.files,
             index = 0,
             len = files.length,
-            file, options;
+            file, fileunit, options;
         
         options = this.setOptions(data);
         
         for (; index < len; index++) {
             file = files[index];
-            new FileUnit({
+            fileunit = new FileUnit({
                 data: {
                     file: file,
                     options: options
                 }
-            }).$inject('#filelist');
+            });
+            fileunit.$on('delete', function () {
+               this.destroy();    
+               self.updateFileList();
+            });
+            fileunit.$on('$destroy', function() {
+                this.destroyed = true;
+            });
+            data.fileList.push({
+                inst: fileunit
+            });
+        }
+        
+        this.updateFileList();
+    },
+
+    updateFileList: function() {
+        var self = this,
+            data = this.data,
+            inputWrapper = data.inputWrapper,
+            filesWrapper = data.filesWrapper,
+            fileList;
+       
+        fileList = data.fileList = data.fileList.filter(function(item) {
+            return !item.inst.destroyed;
+        });
+        
+        filesWrapper.innerHTML = '';
+        fileList.forEach(function(item, index) {
+            var wrapper = item.wrapper = self.createFileUnitWrapper(filesWrapper, index);
+            item.inst.$inject(wrapper);
+        });
+        
+        this.appendInputWrapper();
+        
+        this.$update();
+    },
+    
+    createFileUnitWrapper: function(parent, index) {
+        var wrapper = document.createElement('li');
+        
+        parent.appendChild(wrapper);
+        
+        this.setFileUnitWrapperStyle(wrapper, index);
+        
+        return wrapper;
+    },
+    
+    setFileUnitWrapperStyle: function(wrapper, index) {
+        var data = this.data,
+            numPerline = data.numPerline,
+            fileUnitWidth = data.fileUnitWidth,
+            fileUnitMargin = data.fileUnitMargin;
+        
+        wrapper.className = 'u-fileitem';
+        wrapper.style.display = 'inline-block';
+        wrapper.style.width = fileUnitWidth + 'px';
+        
+        if (index && index % numPerline) {
+            wrapper.style.marginLeft = fileUnitMargin + 'px';
+        }
+    },
+    
+    appendInputWrapper: function() {
+        var data = this.data,
+            inputWrapper = data.inputWrapper,
+            filesWrapper = data.filesWrapper,
+            numPerline = data.numPerline,
+            numLimit = data.numLimit,
+            fileUnitMargin = data.fileUnitMargin,
+            length = data.fileList.length;
+
+        if (length < numLimit) {
+            filesWrapper.appendChild(inputWrapper);
+            
+            if (length % numPerline) {
+                inputWrapper.style.marginLeft = fileUnitMargin + 'px';
+            } else {
+                inputWrapper.style.marginLeft = '0';
+            }
         }
     },
     

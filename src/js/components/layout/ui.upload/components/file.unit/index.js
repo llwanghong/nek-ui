@@ -6,10 +6,11 @@
 
 'use strict';
 
-var  Component = require('../../../../../ui-base/component');
-var  _ = require('../../../../../ui-base/_');
-var  tpl = require('./index.html');
-var  upload = require('../../utils');
+var Component = require('../../../../../ui-base/component');
+var _ = require('../../../../../ui-base/_');
+var tpl = require('./index.html');
+var upload = require('../../utils');
+var Modal = require('../../../../notice/modal');
 
 var FileUnit = Component.extend({
     name: 'file.unit',
@@ -17,23 +18,34 @@ var FileUnit = Component.extend({
     config: function(data) {
         _.extend(data, {
             file: {},
-            options: {},
+            options: {}
+        });
+        
+        _.extend(data, {
             info: '上传失败',
-            status: 'failed'
+            status: '',
+            delConfirm: true
         });
 
-        this.initData(data.file);
+        this.initData(data);
+        
         this.supr(data);
     },
     
-    init: function(data) {
+    init: function(data) {},
+    
+    initData: function(data) {
+        var file = data.file;
+        data.name = this.getFileName(file);
+        data.type = this.getFileType(file);
+        
+        if (data.type === 'IMAGE') {
+            this.initImage(data);
+        }
     },
     
-    initData: function(file) {
-        var data = this.data;
-
-        data.name = file.name;
-        data.type = this.getFileType(data.file);
+    getFileName: function(file) {
+        return file.name;
     },
     
     getFileType: function(file) {
@@ -56,8 +68,39 @@ var FileUnit = Component.extend({
         
         return 'UNKNOWN';
     },
+    
+    initImage: function(data) {
+        this.initImageSrc(data);  
+    },
+
+    initImageSrc: function(data) {
+        data.src = window.URL.createObjectURL(data.file);
+    },
+    
+    uploadFile: function(data) {
+        var freader = new FileReader();
+        freader.onload = function(evt) {
+            // data.src = evt.target.result;
+            // xhr.send(evt.target.result);
+        };
+        freader.readAsBinaryString(data.file);
+    },
+    
     onDelete: function () {
-        this.destroy();
+        var self = this,
+            data = this.data;
+        
+        if (data.delConfirm) {
+            var modal = new Modal({
+                data: {
+                    content: '确认删除' + data.name + '?'
+                }
+            }).$on('ok', function() {
+                self.$emit('delete');
+            });
+        } else {
+            self.$emit('delete');
+        }
     }
 });
 

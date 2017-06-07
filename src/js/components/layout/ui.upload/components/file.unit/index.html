@@ -11,7 +11,7 @@
         {#elseif type === 'UNKNOWN'}
             <span class="u-txt">未知</span>
         {/if}
-        <div class="m-delete" on-click={this.onDelete()}></div>
+        <div class="m-delete" r-hide={status === 'uploaded'} on-click={this.onDelete()}></div>
         <div class="m-status">
             {#if status === 'failed'}
                 <span class="u-failed">
