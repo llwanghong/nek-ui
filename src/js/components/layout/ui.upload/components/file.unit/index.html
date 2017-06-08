@@ -1,7 +1,9 @@
 <div class="m-file-unit">
     <div class="m-content">
         {#if type === 'IMAGE'}
-            <img class="u-img" src={src} on-click={this.onPreview()}/>
+            <div class="m-img-wrapper" on-click={this.onPreview()}>
+                <img class="u-img" src={src}/>
+            </div>
         {#elseif type === 'ZIP'}
             <span class="u-txt">ZIP</span>
         {#elseif type === 'UNKNOWN'}

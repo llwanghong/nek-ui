@@ -56,11 +56,68 @@
         .m-full-panel {
             left: 0;
             width: 70%;
+            .u-pre-btn, .u-next-btn {
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                top: 275px;
+                &:before {
+                    content: "";
+                    display: inline-block;
+                    height: 100%;
+                    vertical-align: middle;
+                    background: #fff;
+                }
+                .u-icon {
+                    display: inline-block;
+                    width: 100%;
+                    height: 3px;
+                    vertical-align: middle;
+                    text-align: center;
+                    &:before, &:after {
+                        content: "";
+                        position: absolute;
+                        width: 22px;
+                        height: 3px;
+                        border-radius: 100px;
+                        background-color: #fff;
+                    }
+                }
+            }
+            .u-pre-btn {
+                left: 50px;
+                .u-icon {
+                    &:before, &:after {
+                        transform-origin: 0;
+                    }
+                    &:before {
+                        transform: translate(-50%, -0.5px) rotate(45deg);
+                    }
+                    &:after {
+                        transform: translate(-50%, 0.5px) rotate(-45deg);
+                    }
+                }
+            }
+            .u-next-btn {
+                right: 50px;
+                .u-icon {
+                    &:before, &:after {
+                        transform-origin: 100%;
+                    }
+                    &:before {
+                        transform: translate(-50%, 0.5px) rotate(45deg);
+                    }
+                    &:after {
+                        transform: translate(-50%, -0.5px) rotate(-45deg);
+                    }
+                }
+            }
             .m-image-list {
                 position: relative;
                 width: 500px;
                 height: 500px;
                 margin: 50px auto 25px;
+                overflow: hidden;
                 .m-image-item {
                     width: 100%;
                     height: 100%;
@@ -74,63 +131,6 @@
                         display: inline-block;
                         height: 100%;
                         vertical-align: middle;
-                    }
-                }
-                .u-pre-btn, .u-next-btn {
-                    position: absolute;
-                    width: 50px;
-                    height: 50px;
-                    top: 50%;
-                    margin-top: -25px;
-                    &:before {
-                        content: "";
-                        display: inline-block;
-                        height: 100%;
-                        vertical-align: middle;
-                        background: #fff;
-                    }
-                    .u-icon {
-                        display: inline-block;
-                        width: 100%;
-                        height: 5px;
-                        vertical-align: middle;
-                        text-align: center;
-                        &:before, &:after {
-                            content: "";
-                            position: absolute;
-                            width: 20px;
-                            height: 5px;
-                            border-radius: 100px;
-                            background-color: #fff;
-                        }
-                    }
-                }
-                .u-pre-btn {
-                    left: -180px;
-                    .u-icon {
-                        &:before, &:after {
-                            transform-origin: 0;
-                        }
-                        &:before {
-                            transform: translate(-50%, -1.5px) rotate(45deg);
-                        }
-                        &:after {
-                            transform: translate(-50%, 1.5px) rotate(-45deg);
-                        }
-                    }
-                }
-                .u-next-btn {
-                    right: -180px;
-                    .u-icon {
-                        &:before, &:after {
-                            transform-origin: 100%;
-                        }
-                        &:before {
-                            transform: translate(-50%, 1.5px) rotate(45deg);
-                        }
-                        &:after {
-                            transform: translate(-50%, -1.5px) rotate(-45deg);
-                        }
                     }
                 }
             }
@@ -158,9 +158,43 @@
             .m-image-list {
                 margin: 15px auto;
                 height: 80%;
-                width: 90%;
-                border: 1px solid;
-                img {
+                width: 370px;
+                padding: 10px;
+                box-sizing: border-box;
+                outline: 1px solid;
+                .m-image-item {
+                    position: relative;
+                    display: inline-block;
+                    width: 80px;
+                    height: 80px;
+                    margin-left: 10px;
+                    margin-bottom: 10px;
+                    vertical-align: top;
+                    text-align: center;
+                    background: #fff;
+                    &:nth-child(4n + 1) {
+                        margin-left: 0;
+                    }
+                    img {
+                        max-width: 100%;
+                        max-height: 100%;
+                        vertical-align: middle;
+                    }
+                    &:before {
+                        content: "";
+                        display: inline-block;
+                        height: 100%;
+                        vertical-align: middle;
+                    }
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        background: rgba(0, 0, 0, 0.4);
+                    }
                 }
             }
         }

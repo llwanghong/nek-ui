@@ -92,8 +92,43 @@ var UIUpload = Component.extend({
             fileunit = new FileUnit({ data: data });
         
         fileunit.$on('preview', function() {
-            new ImagePreview().$inject(imagePreview);
+            function filterImgFile(file) {
+                return file.inst.data.type === 'IMAGE';
+            }
+            var imgList = self.data.fileList.filter(filterImgFile).map(function (img) { return img.inst; });
+            
+            var preview = createImagePreview(imgList);
+            
+            preview.$inject(imagePreview);
         });
+        
+        function createImagePreview(imgFileList) {
+            var imagePreview = new ImagePreview({
+                data: {
+                    imgList: imgFileList.map(function(img) {
+                        return {
+                            src: img.data.src,
+                            name: img.data.name
+                        };
+                    })
+                }
+            });
+
+            imagePreview.$on('delete', function(imgInfo) {
+                var index = imgInfo.index,
+                    imgInst = imgFileList[index];
+
+                if (imgInst) {
+                    imgInst.destroy();
+                }
+            });
+            
+            imagePreview.$on('$destroy', function() {
+                imgFileList = null;
+            });
+            
+            return imagePreview;
+        }
         
         fileunit.$on('delete', function () {
             this.destroy();

@@ -2,13 +2,13 @@
     <div class="m-panel-wrapper">
         <div class="m-panel-close" on-click={this.onClose()}></div>
         <div class="m-full-panel">
+            <span class="u-pre-btn" on-click={this.onPrev()}><i class="u-icon"></i></span>
             <ul class="m-image-list">
-                <span class="u-pre-btn" on-click={this.onPrev()}><i class="u-icon"></i></span>
                 {#list imgList as img}
-                    <li class="m-image-item"><img src={current.src} alt={current.name}/></li>
+                    <li class="m-image-item"><img src={img.src} alt={img.name}/></li>
                 {/list}
-                <span class="u-next-btn" on-click={this.onNext()}><i class="u-icon"></i></span>
             </ul>
+            <span class="u-next-btn" on-click={this.onNext()}><i class="u-icon"></i></span>
             <ul class="m-btn-group">
                 {#list opList as op}
                     <li></li>
@@ -19,7 +19,7 @@
             <div class="u-image-name">{current.name}</div>
             <ul class="m-image-list">
                 {#list imgList as img}
-                    <li class="m-image-item"><img src={current.src} alt={current.name}/></li>
+                    <li class="m-image-item"><img src={img.src} alt={img.name}/></li>
                 {/list}
             </ul>
         </div>

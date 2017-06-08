@@ -22,6 +22,23 @@
             box-sizing: border-box;
             font-size: 12px;
             cursor: pointer;
+            .u-input-content {
+                display: inline-block;
+                width: 100%;
+                vertical-align: middle;
+                .u-icon {
+                    display: inline-block;
+                    width: 100%;
+                    font-size: 12px;
+                    color: #666;
+                }
+            }
+            &:before {
+                content: "";
+                display: inline-block;
+                height: 100%;
+                vertical-align: middle;
+            }
         }
     }
 }

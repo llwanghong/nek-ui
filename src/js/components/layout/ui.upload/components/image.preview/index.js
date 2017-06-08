@@ -12,7 +12,7 @@ var  tpl = require('./index.html');
 
 var ImagePreview = Component.extend({
     name: 'image.preview',
-    template: tpl,
+    template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
     config: function (data) {
         _.extend(data, {
             imgList: []
