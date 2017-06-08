@@ -14,7 +14,7 @@
         margin: auto;
         width: 1366px;
         height: 660px;
-        border: 1px solid grey;
+        box-shadow: 0px 0px 10px 0 rgba(0,0,0,0.5);
         .m-panel-close, .u-pre-btn, .u-next-btn {
             cursor: pointer;
         }
