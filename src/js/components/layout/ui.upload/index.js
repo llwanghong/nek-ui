@@ -92,10 +92,20 @@ var UIUpload = Component.extend({
             fileunit = new FileUnit({ data: data });
         
         fileunit.$on('preview', function() {
+            var current = this;
+            
             function filterImgFile(file) {
                 return file.inst.data.type === 'IMAGE';
             }
-            var imgList = self.data.fileList.filter(filterImgFile).map(function (img) { return img.inst; });
+            
+            function mapHelper(img) {
+                if (current === img.inst) {
+                    img.inst.current = true;
+                }
+                return img.inst;
+            }
+            
+            var imgList = self.data.fileList.filter(filterImgFile).map(mapHelper);
             
             var preview = createImagePreview(imgList);
             
@@ -103,14 +113,24 @@ var UIUpload = Component.extend({
         });
         
         function createImagePreview(imgFileList) {
+            function findHelper(img, index) {
+                return img.current;
+            }
+            var curIndex = imgFileList.findIndex(findHelper);
+            
+            function mapHelper(img, index) {
+                delete img.current;
+                return {
+                    src: img.data.src,
+                    name: img.data.name
+                };
+            }
+            var imgList = imgFileList.map(mapHelper);
+            
             var imagePreview = new ImagePreview({
                 data: {
-                    imgList: imgFileList.map(function(img) {
-                        return {
-                            src: img.data.src,
-                            name: img.data.name
-                        };
-                    })
+                    imgList: imgList,
+                    curIndex: curIndex
                 }
             });
 

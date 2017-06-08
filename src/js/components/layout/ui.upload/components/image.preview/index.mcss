@@ -119,8 +119,11 @@
                 margin: 50px auto 25px;
                 overflow: hidden;
                 .m-image-item {
+                    position: absolute;
                     width: 100%;
                     height: 100%;
+                    text-align: center;
+                    transition: opacity 600ms;
                     img {
                         max-width: 100%;
                         max-height: 100%;
@@ -139,6 +142,32 @@
                 height: 50px;
                 margin: 0 auto;
                 background: rgba(0,0,0,0.6);
+                text-align: center;
+                &:before {
+                    content: "";
+                    display: inline-block;
+                    height: 100%;
+                    vertical-align: middle;
+                }
+                .m-btn-item {
+                    display: inline-block;
+                    width: 30px;
+                    height: 55%;
+                    margin-left: 20px;
+                    vertical-align: middle;
+                    text-align: center;
+                    color: #fff;
+                    font-size: 18px;
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                    &:before {
+                        content: "";
+                        display: inline-block;
+                        height: 100%;
+                        vertical-align: middle;
+                    }
+                }
             }
         }
         .m-thumbnail-panel {
@@ -153,7 +182,6 @@
                 font-size: 16px;
                 color: #fff;
                 text-align: center;
-                border: 1px solid;
             }
             .m-image-list {
                 margin: 15px auto;
@@ -161,7 +189,6 @@
                 width: 370px;
                 padding: 10px;
                 box-sizing: border-box;
-                outline: 1px solid;
                 .m-image-item {
                     position: relative;
                     display: inline-block;
@@ -174,6 +201,29 @@
                     background: #fff;
                     &:nth-child(4n + 1) {
                         margin-left: 0;
+                    }
+                    &.current {
+                        width: 86px;
+                        height: 86px;
+                        margin-left: 7px;
+                        margin-right: -3px;
+                        margin-top: -3px;
+                        margin-bottom: -3px;
+                        &:nth-child(4n + 1) {
+                            width: 86px;
+                            height: 86px;
+                            margin-right: -3px;
+                            margin-left: -3px;
+                        }
+                        &:nth-child(4n) {
+                            width: 86px;
+                            height: 86px;
+                            margin-left: 7px;
+                            margin-right: -3px;
+                        }
+                        &:after {
+                            display: none;
+                        }
                     }
                     img {
                         max-width: 100%;
