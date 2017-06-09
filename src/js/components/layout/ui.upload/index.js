@@ -23,7 +23,7 @@ var  tpl = require('./index.html');
  */
 var UIUpload = Component.extend({
     name: 'ui.upload',
-    template: tpl,
+    template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
     config: function(data) {
         _.extend(data, {
             action: '',
@@ -73,14 +73,16 @@ var UIUpload = Component.extend({
         options = this.setOptions(data);
         
         for (; index < len; index++) {
-            file = files[index];
-            fileunit = this.createFileUnit({
-                file: file,
-                options: options
-            });
-            data.fileList.push({
-                inst: fileunit
-            });
+            if (data.fileList.length < data.numLimit) {
+                file = files[index];
+                fileunit = this.createFileUnit({
+                    file: file,
+                    options: options
+                });
+                data.fileList.push({
+                    inst: fileunit
+                });
+            }
         }
         
         this.updateFileList();

@@ -204,6 +204,7 @@
                     vertical-align: top;
                     text-align: center;
                     background: #fff;
+                    cursor: pointer;
                     &:nth-child(4n + 1) {
                         margin-left: 0;
                     }

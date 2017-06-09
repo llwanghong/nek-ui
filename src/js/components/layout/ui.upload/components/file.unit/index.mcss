@@ -20,7 +20,7 @@ $unit-length = 50;
             right: 0;
             left: 0;
             bottom: 0;
-            cursor: pointer;
+            cursor: zoom;
             &:before {
                 content: "";
                 display: inline-block;
