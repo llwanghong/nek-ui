@@ -23,7 +23,7 @@ var FileUnit = Component.extend({
         
         _.extend(data, {
             info: '上传失败',
-            status: '',
+            status: 'uploaded',
             delConfirm: false
         });
 
@@ -38,10 +38,7 @@ var FileUnit = Component.extend({
         var file = data.file;
         data.name = this.getFileName(file);
         data.type = this.getFileType(file);
-        
-        if (data.type === 'IMAGE') {
-            this.initImage(data);
-        }
+        data.src = window.URL.createObjectURL(file);
     },
     
     getFileName: function(file) {
@@ -73,14 +70,6 @@ var FileUnit = Component.extend({
         }
         
         return 'UNKNOWN';
-    },
-    
-    initImage: function(data) {
-        this.initImageSrc(data);  
-    },
-
-    initImageSrc: function(data) {
-        data.src = window.URL.createObjectURL(data.file);
     },
     
     uploadFile: function(data) {

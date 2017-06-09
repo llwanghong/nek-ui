@@ -68,12 +68,11 @@ $unit-length = 50;
                     vertical-align: middle;
                     text-align: center;
                     line-height: 1.2;
-                    &:before {
-                        content: "";
+                    .u-icon {
                         display: inline-block;
                         width: 100%;
                         height: 20px;
-                        background: rgba(255,255,255,0.5);
+                        font-size: 16px;
                     }
                 }
             }
@@ -124,19 +123,15 @@ $unit-length = 50;
                 .u-uploaded-zone {
                     display: inline-block;
                     position: relative;
-                    width: 80%;
+                    width: 100%;
                     height: 100%;
-                    text-align: left;
+                    line-height: 100%;
+                    color: #fff;
+                    text-align: center;
+                    text-decoration: none;
                     cursor: pointer;
-                    &:after {
-                        content: "";
-                        position: absolute;
-                        top: 50%;
-                        right: 0;
-                        width: 12px;
-                        height: 12px;
-                        margin-top: -6px;
-                        background: #efefef;
+                    .u-icon {
+                        margin-left: 2px;
                     }
                 }
             }

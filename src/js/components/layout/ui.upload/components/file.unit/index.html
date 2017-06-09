@@ -15,7 +15,7 @@
         <div class="m-status">
             {#if status === 'failed'}
                 <span class="u-failed">
-                    <span class="u-failed-info">重试</span>
+                    <span class="u-failed-info"><i class="u-icon u-icon-retry"></i>重试</span>
                 </span>
             {#elseif status === 'uploading'}
                 <span class="u-uploading">
@@ -28,7 +28,7 @@
                 </span>
             {#elseif status === 'uploaded'}
                 <span class="u-uploaded">
-                    <span class="u-uploaded-zone">下载</span>
+                    <a class="u-uploaded-zone" href={src} download={name}>下载<i class="u-icon u-icon-import"></i></a>
                 </span>
             {/if}
         </div>
