@@ -6,14 +6,20 @@
             <ul class="m-image-list">
                 {#list imgList as img}
                     <li class="m-image-item" ref="full-{img_index}" r-class={{current: img_index === curIndex}} r-style={{opacity: img_index === curIndex ? 1 : 0}}>
-                        <img src={img.src} alt={img.name}/>
+                        <img ref="full-img-{img_index}" src={img.src} alt={img.name}/>
                     </li>
                 {/list}
             </ul>
             <span class="u-next-btn" on-click={this.onNext()}><i class="u-icon"></i></span>
             <ul class="m-btn-group">
                 {#list opList as op}
-                    <li class="m-btn-item"><i class="u-icon u-icon-{op.icon}"></i></li>
+                    <li class="m-btn-item">
+                        {#if uploaded && op.name === 'import'}
+                            <a class="u-download" href={imgList[curIndex].src} download={imgList[curIndex].name}><i class="u-icon u-icon-{op.icon}"></i></a>
+                        {#else}
+                            <i class="u-icon u-icon-{op.icon}" on-click={this[op.fnName].bind(this)(curIndex)}></i>
+                        {/if}
+                    </li>
                 {/list}
             </ul>
         </div>

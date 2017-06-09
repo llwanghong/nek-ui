@@ -157,6 +157,7 @@ var UIUpload = Component.extend({
         
         fileunit.$on('$destroy', function() {
             this.destroyed = true;
+            self.updateFileList();
         });
         
         return fileunit;

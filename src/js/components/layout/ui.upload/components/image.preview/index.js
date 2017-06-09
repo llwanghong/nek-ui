@@ -8,6 +8,7 @@
 
 var Component = require('../../../../../ui-base/component');
 var _ = require('../../../../../ui-base/_');
+var Modal = require('../../../../notice/modal');
 var  tpl = require('./index.html');
 
 var ImagePreview = Component.extend({
@@ -16,30 +17,36 @@ var ImagePreview = Component.extend({
     config: function (data) {
         _.extend(data, {
             imgList: [],
-            curIndex: 0
+            curIndex: 0,
+            uploaded: true
         });
 
         _.extend(data, {
             opList: [
                 {
                     name: 'zoomIn',
-                    icon: 'zoomin'
+                    icon: 'zoomin',
+                    fnName: 'zoomIn'
                 },
                 {
                     name: 'zoomOut',
-                    icon: 'zoomout'
+                    icon: 'zoomout',
+                    fnName: 'zoomOut'
                 },
                 {
                     name: 'rezoom',
-                    icon: 'rezoom'
+                    icon: 'rezoom',
+                    fnName: 'rezoom'
                 },
                 {
                     name: 'rotate',
-                    icon: 'rotate_right'
+                    icon: 'rotate_right',
+                    fnName: 'rotate'
                 },
                 {
-                    name: 'delete',
-                    icon: 'delete'
+                    name: data.uploaded ? 'import' : 'delete',
+                    icon: data.uploaded ? 'import' : 'delete',
+                    fnName: data.uploaded ? 'onDownload' : 'onDel'
                 }
             ]
         });
@@ -86,6 +93,68 @@ var ImagePreview = Component.extend({
         refs['full-' + toIndex].style.opacity = 1;
         
         this.data.curIndex = toIndex;
+    },
+    zoomIn: function() {
+        
+    },
+    zoomOut: function() {
+
+    },
+    rezoom: function() {
+
+    },
+    rotate: function(index) {
+        var data = this.data,
+            img = this.$refs['full-img-' + index];
+
+        img.rotate = img.rotate ? img.rotate + 90 : 90;
+        img.style.transform = 'rotate(' + img.rotate + 'deg)';
+    },
+    onDel: function(index) {
+        var self = this,
+            data = this.data,
+            imgList = data.imgList,
+            img = imgList[index];
+
+        var modal = new Modal({
+            data: {
+                content: '确认删除' + img.name + '?'
+            }
+        }).$on('ok', function() {
+            imgList = data.imgList.splice(index, 1);
+
+            if (!imgList[index]) {
+                data.curIndex = 0;
+            }
+            self.$emit('delete', {
+                name: img.name,
+                index: index
+            });
+            self.$update();
+        });
+    },
+    onDownload: function(index) {
+        var self = this,
+            data = this.data,
+            imgList = data.imgList,
+            img = imgList[index];
+
+        var modal = new Modal({
+            data: {
+                content: '确认删除' + img.name + '?'
+            }
+        }).$on('ok', function() {
+            imgList = data.imgList.splice(index, 1);
+
+            if (!imgList[index]) {
+                data.curIndex = 0;
+            }
+            self.$emit('delete', {
+                name: img.name,
+                index: index
+            });
+            self.$update();
+        });
     }
 });
 
