@@ -4,11 +4,11 @@
  */
 'use strict';
 
-var  Component = require('../../../../../ui-base/component');
-var  _ = require('../../../../../ui-base/_');
-var  FileUnit = require('../file.unit');
-var  ImagePreview = require('../image.preview');
-var  tpl = require('./index.html');
+var Dropdown = require('../../../../navigation/dropdown');
+var _ = require('../../../../../ui-base/_');
+var FileUnit = require('../file.unit');
+var ImagePreview = require('../image.preview');
+var tpl = require('./index.html');
 
 /**
  * @class Upload
@@ -20,7 +20,8 @@ var  tpl = require('./index.html');
  * @param {boolean}        [options.data.drag]             => 可选，是否支持拖拽上传
  * @param {string}         [options.data.accept]           => 可选，接受上传的文件类型
  */
-var Upload = Component.extend({
+
+var Upload = Dropdown.extend({
     name: 'upload',
     template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
     config: function(data) {
@@ -40,6 +41,7 @@ var Upload = Component.extend({
             fileList: [],
             fileUnitWidth: 50,
             fileUnitMargin: 25,
+            fileListPadding: 22
         });
         
         this.supr(data);
@@ -51,7 +53,13 @@ var Upload = Component.extend({
     },
 
     initData: function() {
-        var filesWrapper = this.data.filesWrapper = this.$refs.fileswrapper;
+        var data = this.data,
+            numPerline = data.numPerline,
+            fileUnitWidth = data.fileUnitWidth,
+            fileUnitMargin = data.fileUnitMargin;
+
+        data.filesWrapper = this.$refs.fileswrapper;
+        data.fileListWidth = fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1);
     },
     
     fileDialogOpen: function() {
@@ -214,6 +222,20 @@ var Upload = Component.extend({
                 'content-type': 'application/json'
             }
         };
+    },
+
+    toggle: function (open, e) {
+        e && e.stopPropagation();
+        var data = this.data;
+
+        this.supr(open);
+    },
+
+    getFilesListCoor: function() {
+        var filesEntry = this.$refs['filesentry'];
+        var entryCoors = filesEntry.getBoundingClientRect();
+        // var fileListWidth = 
+        // return {};
     }
 });
 
