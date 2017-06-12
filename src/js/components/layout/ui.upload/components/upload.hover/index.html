@@ -12,6 +12,7 @@
             {#else} <!-- TEXT, DOC, JS, HTML -->
                 <span class="u-txt">{fileList[0] && fileList[0].inst.data.type}</span>
             {/if}
+            <span class="u-info">{fileList.length}</span>
             <span ref="filesbanner" class="u-banner" r-class={{'top': isTopBanner}}></span>
             <ul ref="fileswrapper" class="m-filelist" r-hide={fileList.length === 0} r-style={{width: fileListWidth + 'px'}}></ul>
         </div>
