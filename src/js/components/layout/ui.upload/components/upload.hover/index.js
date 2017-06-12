@@ -226,16 +226,91 @@ var Upload = Dropdown.extend({
 
     toggle: function (open, e) {
         e && e.stopPropagation();
+
         var data = this.data;
+        var filesWrapper = this.$refs['fileswrapper'];
+        
+        this.setPosition(!open);
 
         this.supr(open);
     },
 
-    getFilesListCoor: function() {
+    setPosition: function(hidden) {
+        var filesBanner = this.$refs['filesbanner'];
+        var filesWrapper = this.$refs['fileswrapper'];
+        if (hidden) {
+            filesBanner.style.left = '-9999px';
+            filesWrapper.style.left = '-9999px';
+            return;
+        }
+        this.setVerticalPosition();
+        this.setHorizontalPosition();
+    },
+    
+    setVerticalPosition: function(style) {
         var filesEntry = this.$refs['filesentry'];
-        var entryCoors = filesEntry.getBoundingClientRect();
-        // var fileListWidth = 
-        // return {};
+        var filesEntryCoors = filesEntry.getBoundingClientRect();
+        var filesWrapper = this.$refs['fileswrapper'];
+        var filesWrapperCoors = filesWrapper.getBoundingClientRect();
+        var viewHeight = document.documentElement.clientHeight;
+        var viewWidth = document.documentElement.clientWidth;
+        
+        // show at vertical bottom side
+        var vertical = 'bottom';
+        var isVerticalBottomSide = filesEntryCoors.bottom + filesWrapperCoors.height < viewHeight;
+        // show at vertical top side
+        var isVerticalTopSide = filesEntryCoors.top - filesWrapperCoors.height > 0;
+        if (isVerticalTopSide) {
+            vertical = 'top';
+        }
+        
+        if (vertical === 'bottom') {
+            filesWrapper.style.top = '53px';
+            filesWrapper.style.bottom = 'auto';
+            filesWrapper.style.boxShadow = 'auto';
+            filesWrapper.style.boxShadow = '0 2px 3px 0 rgba(0,0,0,0.1)';
+            this.data.isTopBanner = false;
+        } else {
+            this.data.isTopBanner = true;
+            filesWrapper.style.top = 'auto';
+            filesWrapper.style.bottom = '53px';
+            filesWrapper.style.boxShadow = '0 -2px 3px 0 rgba(0,0,0,0.1)';
+        }
+    },
+    
+    setHorizontalPosition: function() {
+        var filesEntry = this.$refs['filesentry'];
+        var filesEntryCoors = filesEntry.getBoundingClientRect();
+        var filesBanner = this.$refs['filesbanner'];
+        var filesWrapper = this.$refs['fileswrapper'];
+        var filesWrapperCoors = filesWrapper.getBoundingClientRect();
+        var viewHeight = document.documentElement.clientHeight;
+        var viewWidth = document.documentElement.clientWidth;
+        
+        // show at central
+        var horizontal = 'left';
+        var offsetWidth = filesWrapperCoors.width / 2 - filesEntryCoors.width / 2;
+        var isHorizontalLeftEdge = filesEntryCoors.left - offsetWidth < 0;
+        var isHorizontalRightEdge = filesEntryCoors.right + offsetWidth > viewWidth;
+        if (isHorizontalRightEdge) {
+            horizontal = 'right';
+        }
+        var isHorizontalCenter = !isHorizontalLeftEdge && !isHorizontalRightEdge;
+        if (isHorizontalCenter) {
+            horizontal = 'central';
+        }
+        
+        if (horizontal === 'left') {
+            filesWrapper.style.left = '0';
+            filesWrapper.style.right = 'auto';
+        } else if (horizontal === 'right') {
+            filesWrapper.style.left = 'auto';
+            filesWrapper.style.right = '0';
+        } else if (horizontal === 'central') {
+            filesWrapper.style.left = '-' + offsetWidth + 'px';
+        }
+        
+        filesBanner.style.left = '20px';
     }
 });
 

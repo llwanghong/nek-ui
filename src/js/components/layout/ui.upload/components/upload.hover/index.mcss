@@ -31,7 +31,7 @@ $margin = 20;
                right: 0;
                left: 0;
                bottom: 0;
-               cursor: zoom;
+               cursor: pointer;
                &:before {
                    content: "";
                    display: inline-block;
@@ -60,9 +60,40 @@ $margin = 20;
                vertical-align: middle;
            }
        }
+       .u-banner {
+           position: absolute;
+           bottom: -7px;
+           left: -9999px;
+           z-index: 5;
+           &:before, &:after {
+               content: "";
+               border: 5px solid transparent;
+               position: absolute;
+               left: 0;
+           }
+           &:before {
+               border-bottom-color: #eee;
+               bottom: 1px;
+           }
+           &:after {
+               border-bottom-color: #fff;
+               bottom: 0;
+           }
+           &.top {
+               top: -7px;
+               &:before {
+                   border-top-color: #eee;
+                   top: 1px;
+               }
+               &:after {
+                   border-top-color: #fff;
+                   top: 0;
+               }
+           }
+       }
        .m-filelist {
            position: absolute;
-           top: 53px;
+           left: -9999px;
            padding: 22px;
            padding-bottom: 12px;
            text-align: left;
@@ -70,22 +101,6 @@ $margin = 20;
            border-radius: 2px;
            box-shadow: 0 2px 3px 0 rgba(0,0,0,0.10);
            background: #FFFFFF;
-           &:before {
-               content: "";
-               border: 5px solid transparent;
-               border-bottom-color: #eee;
-               position: absolute;
-               top: -11px;
-               left: 22px;
-           }
-           &:after {
-               content: "";
-               border: 5px solid transparent;
-               border-bottom-color: #fff;
-               position: absolute;
-               top: -10px;
-               left: 22px;
-           }
        }
        .u-input-wrapper {
            display: inline-block;

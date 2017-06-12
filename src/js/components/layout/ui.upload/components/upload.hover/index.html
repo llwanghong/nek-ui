@@ -3,7 +3,7 @@
         <div ref="filesentry" class="m-entry" r-hide={fileList.length === 0} on-click={this.toggle(!open, $event)}>
             {#if fileList[0] && fileList[0].inst.data.type === 'IMAGE'}
                 <div class="m-img-wrapper">
-                    <img class="u-img" src={src}/>
+                    <img class="u-img" src={fileList[0] && fileList[0].inst.data.src} alt={fileList[0] && fileList[0].inst.data.name}/>
                 </div>
             {#elseif fileList[0] && fileList[0].inst.data.type === 'ZIP'}
                 <span class="u-txt">ZIP</span>
@@ -12,7 +12,8 @@
             {#else} <!-- TEXT, DOC, JS, HTML -->
                 <span class="u-txt">{fileList[0] && fileList[0].inst.data.type}</span>
             {/if}
-            <ul ref="fileswrapper" class="m-filelist" r-hide={fileList.length === 0} r-style={{width: fileListWidth + 'px', visibility: open ? 'visible' : 'hidden'}}></ul>
+            <span ref="filesbanner" class="u-banner" r-class={{'top': isTopBanner}}></span>
+            <ul ref="fileswrapper" class="m-filelist" r-hide={fileList.length === 0} r-style={{width: fileListWidth + 'px'}}></ul>
         </div>
         <div ref="inputwrapper" class="u-input-wrapper" on-click={this.fileDialogOpen()}>
             {#if this.$body}
