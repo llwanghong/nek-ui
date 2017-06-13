@@ -183,6 +183,17 @@ var Upload = Dropdown.extend({
             }
         });
         
+        fileunit.$on('success', function(info) {
+            var allUploaded = true;
+            self.data.fileList.forEach(function(item) {
+                allUploaded &= item.inst.data.status === 'uploaded';
+            });
+            if (allUploaded) {
+                self.data.status = 'uploaded';
+                self.$update();
+            }
+        });
+        
         fileunit.$on('error', function(info) {
             self.data.status = 'failed';
             self.$update();
