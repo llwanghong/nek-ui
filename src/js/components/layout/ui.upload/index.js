@@ -27,7 +27,7 @@ var UIUpload = Component.extend({
     config: function(data) {
         _.extend(data, {
             action: '',
-            contentType: 'multipart/form-data',
+            encType: 'multipart/form-data',
             multiple: false,
             drag: false,
             accept: '*',

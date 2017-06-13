@@ -1,6 +1,6 @@
 <div class="m-upload">
     <ul ref="fileswrapper" class="m-filelist" r-style={{width: fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1) + 'px'}}></ul>
-    <form method="POST" action={url} target="iframe{_id}" enctype={contentType} ref="form">
+    <form method="POST" action={url} target="iframe{_id}" enctype={encType} ref="form">
         <input type="file" name={name} ref="file" multiple={multiple ? 'multiple' : ''} r-hide={true} on-change={this.fileSelect()}>
         {#list Object.keys(data) as key}
             <input type="hidden" name={key} value={data[key]}>

@@ -22,7 +22,7 @@ var FileUnit = Component.extend({
         });
         
         _.extend(data, {
-            info: '上传失败',
+            info: '',
             status: '',
             delConfirm: false
         });
@@ -76,32 +76,31 @@ var FileUnit = Component.extend({
     
     uploadFile: function(file) {
         var self = this,
-            data = this.data,
-            freader = new FileReader();
-        
-        freader.onload = function(evt) {
-            var options = {
-                upload: {
-                    onload: function(e) {
-                        data.status = 'uploaded';
-                        data.progress = '100%';
-                        self.$update();
-                    },
-                    onprogress: function(e) {
-                        data.status = 'uploading';
-                        data.progress = parseInt((e.loaded / e.total) * 100) + '%';
-                        self.$update();
-                    }
+            data = this.data;
+
+        var options = {
+            upload: {
+                onload: function(e) {
+                    data.status = 'uploaded';
+                    data.progress = '100%';
+                    self.$update();
                 },
-                onload: function(e) { },
-                onerror: function(e) {
-                    data.status = 'failed';
+                onprogress: function(e) {
+                    data.status = 'uploading';
+                    data.progress = parseInt((e.loaded / e.total) * 100) + '%';
                     self.$update();
                 }
-            };
-            upload('http://localhost:3000/upload', evt.target.result, options);
+            },
+            onload: function(e) { },
+            onerror: function(e) {
+                data.status = 'failed';
+                data.info = '上传失败';
+                self.$update();
+            }
         };
-        freader.readAsBinaryString(file);
+
+        options = _.extend(options, data.options);
+        upload(options.url, file, options);
     },
     
     onDelete: function () {

@@ -65,11 +65,12 @@ var UploadList = Component.extend({
     fileSelect: function() {
         var self = this,
             data = this.data,
-            files = this.$refs.file.files,
+            inputNode = this.$refs.file,
+            files = inputNode.files,
             index = 0,
             len = files.length,
             file, fileunit, options;
-        
+
         options = this.setOptions(data);
         
         for (; index < len; index++) {
@@ -84,6 +85,8 @@ var UploadList = Component.extend({
                 });
             }
         }
+
+        inputNode.value = '';
         
         this.updateFileList();
     },
@@ -237,10 +240,7 @@ var UploadList = Component.extend({
         data = data || {};
         
         return {
-            url: data.action,
-            headers: {
-                'content-type': 'application/json'
-            }
+            url: data.action
         };
     }
 });
