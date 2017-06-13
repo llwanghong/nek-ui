@@ -44,9 +44,9 @@ var ImagePreview = Component.extend({
                     fnName: 'rotate'
                 },
                 {
-                    name: data.uploaded ? 'import' : 'delete',
-                    icon: data.uploaded ? 'import' : 'delete',
-                    fnName: data.uploaded ? 'onDownload' : 'onDel'
+                    name: 'delete',
+                    icon: 'delete',
+                    fnName: 'onDel'
                 }
             ]
         });

@@ -14,13 +14,13 @@
         <div class="m-delete" r-hide={status === 'uploaded'} on-click={this.onDelete()}></div>
         <div class="m-status">
             {#if status === 'failed'}
-                <span class="u-failed">
+                <span class="u-failed" on-click={this.uploadFile(file)}>
                     <span class="u-failed-info"><i class="u-icon u-icon-retry"></i>重试</span>
                 </span>
             {#elseif status === 'uploading'}
                 <span class="u-uploading">
                     <span class="u-progress-wrapper">
-                        <span class="u-progress-txt">{progress || '65%'}</span>
+                        <span class="u-progress-txt">{progress || '0%'}</span>
                         <span class="u-progress">
                             <span class="u-progress-bar" style="width: {progress || '65%'};"></span>
                         </span>

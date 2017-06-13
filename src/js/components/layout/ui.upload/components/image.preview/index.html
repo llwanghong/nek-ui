@@ -14,8 +14,8 @@
             <ul class="m-btn-group">
                 {#list opList as op}
                     <li class="m-btn-item">
-                        {#if uploaded && op.name === 'import'}
-                            <a class="u-download" href={imgList[curIndex].src} download={imgList[curIndex].name}><i class="u-icon u-icon-{op.icon}"></i></a>
+                        {#if imgList[curIndex].status === 'uploaded' && op.name === 'delete'}
+                            <a class="u-download" href={imgList[curIndex].src} download={imgList[curIndex].name}><i class="u-icon u-icon-import"></i></a>
                         {#else}
                             <i class="u-icon u-icon-{op.icon}" on-click={this[op.fnName].bind(this)(curIndex)}></i>
                         {/if}

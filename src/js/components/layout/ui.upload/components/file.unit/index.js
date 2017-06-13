@@ -122,7 +122,7 @@ var FileUnit = Component.extend({
     },
     
     onPreview: function() {
-        this.$emit('preview', {});
+        this.$emit('preview');
     }
 });
 

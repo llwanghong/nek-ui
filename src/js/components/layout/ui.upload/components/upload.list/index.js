@@ -124,7 +124,8 @@ var UploadList = Component.extend({
                 delete img.current;
                 return {
                     src: img.data.src,
-                    name: img.data.name
+                    name: img.data.name,
+                    status: img.data.status
                 };
             }
             var imgList = imgFileList.map(mapHelper);
