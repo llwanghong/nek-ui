@@ -31,7 +31,7 @@ var UIUpload = Component.extend({
             multiple: false,
             drag: false,
             accept: '*',
-            componentName: 'hover',
+            componentName: 'list',
             data: {},
             numLimit: 10,
             numPerline: 3

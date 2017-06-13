@@ -23,7 +23,7 @@ var FileUnit = Component.extend({
         
         _.extend(data, {
             info: '上传失败',
-            status: 'uploaded',
+            status: '',
             delConfirm: false
         });
 
@@ -39,6 +39,8 @@ var FileUnit = Component.extend({
         data.name = this.getFileName(file);
         data.type = this.getFileType(file);
         data.src = window.URL.createObjectURL(file);
+        
+        this.uploadFile(file);
     },
     
     getFileName: function(file) {
@@ -72,13 +74,34 @@ var FileUnit = Component.extend({
         return 'UNKNOWN';
     },
     
-    uploadFile: function(data) {
-        var freader = new FileReader();
+    uploadFile: function(file) {
+        var self = this,
+            data = this.data,
+            freader = new FileReader();
+        
         freader.onload = function(evt) {
-            // data.src = evt.target.result;
-            // xhr.send(evt.target.result);
+            var options = {
+                upload: {
+                    onload: function(e) {
+                        data.status = 'uploaded';
+                        data.progress = '100%';
+                        self.$update();
+                    },
+                    onprogress: function(e) {
+                        data.status = 'uploading';
+                        data.progress = parseInt((e.loaded / e.total) * 100) + '%';
+                        self.$update();
+                    }
+                },
+                onload: function(e) { },
+                onerror: function(e) {
+                    data.status = 'failed';
+                    self.$update();
+                }
+            };
+            upload('http://localhost:3000/upload', evt.target.result, options);
         };
-        freader.readAsBinaryString(data.file);
+        freader.readAsBinaryString(file);
     },
     
     onDelete: function () {

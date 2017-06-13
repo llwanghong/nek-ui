@@ -62,6 +62,7 @@ $unit-length = 50;
                 }
             }
             .u-failed {
+                cursor: pointer;
                 .u-failed-info {
                     display: inline-block;
                     width: 100%;

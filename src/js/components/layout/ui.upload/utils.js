@@ -8,7 +8,7 @@ var defaults = {
 function upload(url, data, options) {
     var fd = new FormData();
     
-    if (fd instanceof File) {
+    if (data instanceof File) {
         data = {
             file: data
         }
@@ -35,21 +35,33 @@ function ajax(options) {
         xhr.setRequestHeader(key, headers[key]);
     }
 
-    var callback = function() { alert(111); };
-    xhr.addEventListener('load', callback);
-    xhr.addEventListener('error', callback);
+    var onerror = options.onerror || function(e) {
+        console.log('error', e);
+    };
     
-    if (options.progress) {
-        xhr.addEventListener('progress', callback);
-    }
+    var onload = options.onload || function(e) {
+        console.log('loaded', e);
+    };
+    
+    var onprogress = options.onprogress || function(e) {
+        console.log('progress', e);
+    };
+    
+    xhr.addEventListener('load', onload);
+    xhr.addEventListener('error', onerror);
+    xhr.addEventListener('progress', onprogress);
     
     if (options.upload) {
-        if (options.upload.load) {
-            xhr.upload.addEventListener('load', options.upload.load);
-        }
-        if (options.upload.progress) {
-            xhr.upload.addEventListener('progress', options.upload.progress);
-        }
+        var onuploadLoad = options.upload.onload || function(e) {
+            console.log('upload loaded', e);
+        };
+
+        var onuploadProgress = options.upload.onprogress || function(e) {
+            console.log('upload progress', e);
+        };
+
+        xhr.upload.addEventListener('load', onuploadLoad);
+        xhr.upload.addEventListener('progress', onuploadProgress);
     }
     
     xhr.send(options.data);
