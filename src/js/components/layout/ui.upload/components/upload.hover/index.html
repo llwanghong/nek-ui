@@ -1,16 +1,16 @@
 <div class="m-upload">
     <div class="m-files-zone">
         <div ref="filesentry" class="m-entry" r-hide={fileList.length === 0} on-click={this.toggle(!open, $event)}>
-            {#if fileList[0] && fileList[0].inst.data.type === 'IMAGE'}
+            {#if fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type === 'IMAGE'}
                 <div class="m-img-wrapper">
-                    <img class="u-img" src={fileList[0] && fileList[0].inst.data.src} alt={fileList[0] && fileList[0].inst.data.name}/>
+                    <img class="u-img" src={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.src} alt={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.name}/>
                 </div>
-            {#elseif fileList[0] && fileList[0].inst.data.type === 'ZIP'}
+            {#elseif fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type === 'ZIP'}
                 <span class="u-txt">ZIP</span>
-            {#elseif fileList[0] && fileList[0].inst.data.type === 'UNKNOWN'}
+            {#elseif fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type === 'UNKNOWN'}
                 <span class="u-txt">未知</span>
             {#else} <!-- TEXT, DOC, JS, HTML -->
-                <span class="u-txt">{fileList[0] && fileList[0].inst.data.type}</span>
+                <span class="u-txt">{fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type}</span>
             {/if}
             <span class="u-info">{fileList.length}</span>
             <span ref="filesbanner" class="u-banner" r-class={{'top': isTopBanner}}></span>
