@@ -84,18 +84,21 @@ var FileUnit = Component.extend({
                     data.status = 'uploaded';
                     data.progress = '100%';
                     self.$update();
+                    self.$emit('success', { progress: data.progress });
                 },
                 onprogress: function(e) {
                     data.status = 'uploading';
                     data.progress = parseInt((e.loaded / e.total) * 100) + '%';
                     self.$update();
+                    self.$emit('progress', { progress: data.progress });
                 }
             },
-            onload: function(e) { },
+            onload: function(e) {},
             onerror: function(e) {
                 data.status = 'failed';
                 data.info = '上传失败';
                 self.$update();
+                self.$emit('error', { info: e });
             }
         };
 

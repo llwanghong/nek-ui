@@ -68,6 +68,69 @@ $margin = 20;
                color: #333;
                font-size: 12px;
            }
+           .m-status {
+               .u-failed, .u-uploading {
+                   position: absolute;
+                   top: 0;
+                   left: 0;
+                   display: inline-block;
+                   width: 100%;
+                   height: 100%;
+                   text-align: center;
+                   font-size: 12px;
+                   color: #fff;
+                   background: rgba(0, 0, 0, 0.7);
+                   &:before {
+                       content: "";
+                       display: inline-block;
+                       height: 100%;
+                       vertical-align: middle;
+                   }
+               }
+               .u-failed {
+                   cursor: pointer;
+                   .u-failed-info {
+                       display: inline-block;
+                       width: 100%;
+                       vertical-align: middle;
+                       text-align: center;
+                       line-height: 1.2;
+                       .u-icon {
+                           display: inline-block;
+                           width: 100%;
+                           height: 20px;
+                           font-size: 16px;
+                       }
+                   }
+               }
+               .u-uploading {
+                   .u-progress-wrapper {
+                       display: inline-block;
+                       width: 40px;
+                       line-height: 0.85;
+                       vertical-align: middle;
+                       .u-progress-txt, .u-progress {
+                           display: inline-block;
+                           width: 100%;
+                       }
+                       .u-progress {
+                           position: relative;
+                           height: 5px;
+                           background: #fff;
+                           border-radius: 100px;
+                           .u-progress-bar {
+                               position: absolute;
+                               top: 0;
+                               left: 0;
+                               display: inline-block;
+                               height: 100%;
+                               background: #0398FF;
+                               border-radius: 100px;
+                           }
+                       }
+                   }
+               }
+           }
            &:before {
                content: "";
                display: inline-block;

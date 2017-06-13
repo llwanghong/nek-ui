@@ -38,6 +38,7 @@ var Upload = Dropdown.extend({
         });
         
         _.extend(data, {
+            status: 'uploaded',
             fileList: [],
             fileUnitWidth: 50,
             fileUnitMargin: 25,
@@ -160,7 +161,34 @@ var Upload = Dropdown.extend({
             return imagePreview;
         }
         
-        fileunit.$on('delete', function () {
+        fileunit.$on('progress', function(info) {
+            var data = self.data,
+                curInst = this,
+                curIndex = -1,
+                lastIndex = -1;
+
+            self.data.fileList.forEach(function(item, index) {
+                if (item.inst.data.status === 'uploading') {
+                    lastIndex = index;
+                }
+                if (item.inst === curInst) {
+                    curIndex = index;
+                }
+            });
+            
+            if (curIndex >= lastIndex && data.status != 'failed') {
+                data.status = 'uploading';
+                data.progress = info.progress;
+                self.$update();
+            }
+        });
+        
+        fileunit.$on('error', function(info) {
+            self.data.status = 'failed';
+            self.$update();
+        });
+        
+        fileunit.$on('delete', function() {
             this.destroy();
             self.updateFileList();
         });
@@ -223,6 +251,19 @@ var Upload = Dropdown.extend({
         return {
             url: data.action
         };
+    },
+    
+    uploadFiles: function() {
+        var fileList = this.data.fileList;
+        
+        fileList.forEach(function(item) {
+            var inst = item.inst,
+                data = inst.data;
+            
+            if (data.status === 'failed') {
+                inst.uploadFile(data.file);
+            }
+        });
     },
 
     toggle: function (open, e) {

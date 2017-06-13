@@ -12,6 +12,22 @@
             {#else} <!-- TEXT, DOC, JS, HTML -->
                 <span class="u-txt">{fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type}</span>
             {/if}
+            <div class="m-status">
+                {#if status === 'failed'}
+                    <span class="u-failed" on-click={this.uploadFiles()}>
+                        <span class="u-failed-info"><i class="u-icon u-icon-retry"></i>重试</span>
+                    </span>
+                {#elseif status === 'uploading'}
+                    <span class="u-uploading">
+                        <span class="u-progress-wrapper">
+                            <span class="u-progress-txt">{progress || '0%'}</span>
+                            <span class="u-progress">
+                                <span class="u-progress-bar" style="width: {progress || '0%'};"></span>
+                            </span>
+                        </span>
+                    </span>
+                {/if}
+            </div>
             <span class="u-info">{fileList.length}</span>
             <span ref="filesbanner" class="u-banner" r-class={{'top': isTopBanner}}></span>
             <ul ref="fileswrapper" class="m-filelist" r-hide={fileList.length === 0} r-style={{width: fileListWidth + 'px'}}></ul>
