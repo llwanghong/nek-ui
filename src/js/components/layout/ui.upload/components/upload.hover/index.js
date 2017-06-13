@@ -254,7 +254,10 @@ var Upload = Dropdown.extend({
     },
     
     uploadFiles: function() {
-        var fileList = this.data.fileList;
+        var data = this.data,
+            fileList = data.fileList;
+        
+        data.status = 'uploaded';
         
         fileList.forEach(function(item) {
             var inst = item.inst,
