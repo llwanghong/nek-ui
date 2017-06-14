@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var Dropdown = require('../../../../navigation/dropdown');
+var Component = require('../../../../../ui-base/component');
 var _ = require('../../../../../ui-base/_');
 var FileUnit = require('../file.unit');
 var ImagePreview = require('../image.preview');
@@ -21,7 +21,7 @@ var tpl = require('./index.html');
  * @param {string}         [options.data.accept]           => 可选，接受上传的文件类型
  */
 
-var Upload = Dropdown.extend({
+var Upload = Component.extend({
     name: 'upload',
     template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
     config: function(data) {
@@ -101,7 +101,9 @@ var Upload = Dropdown.extend({
             imagePreview = this.$refs.imagepreview,
             fileunit = new FileUnit({ data: data });
         
-        fileunit.$on('preview', function() {
+        fileunit.$on('preview', previewCb);
+        
+        function previewCb() {
             var current = this;
             
             function filterImgFile(file) {
@@ -120,8 +122,8 @@ var Upload = Dropdown.extend({
             var preview = createImagePreview(imgList);
             
             preview.$inject(imagePreview);
-        });
-        
+        }
+
         function createImagePreview(imgFileList) {
             function findHelper(img, index) {
                 return img.current;
@@ -161,7 +163,9 @@ var Upload = Dropdown.extend({
             return imagePreview;
         }
         
-        fileunit.$on('progress', function(info) {
+        fileunit.$on('progress', progressCb);
+        
+        function progressCb(info) {
             var data = self.data,
                 curInst = this,
                 curIndex = -1,
@@ -181,9 +185,11 @@ var Upload = Dropdown.extend({
                 data.progress = info.progress;
                 self.$update();
             }
-        });
+        }
+
+        fileunit.$on('success', successCb);
         
-        fileunit.$on('success', function(info) {
+        function successCb() {
             var allUploaded = true;
             self.data.fileList.forEach(function(item) {
                 allUploaded &= item.inst.data.status === 'uploaded';
@@ -192,8 +198,8 @@ var Upload = Dropdown.extend({
                 self.data.status = 'uploaded';
                 self.$update();
             }
-        });
-        
+        }
+
         fileunit.$on('error', function(info) {
             self.data.status = 'failed';
             self.$update();
@@ -206,8 +212,15 @@ var Upload = Dropdown.extend({
         
         fileunit.$on('$destroy', function() {
             this.destroyed = true;
+            this.$off('preview', previewCb);
+            this.$off('success', successCb);
             self.updateFileList();
+            resetStatus();
         });
+
+        function resetStatus() {
+            successCb();
+        }
         
         return fileunit;
     },
@@ -280,15 +293,21 @@ var Upload = Dropdown.extend({
         });
     },
 
-    toggle: function (open, e) {
-        e && e.stopPropagation();
-
+    toggle: function (open) {
         var data = this.data;
-        var filesWrapper = this.$refs['fileswrapper'];
-        
+        if (typeof open === 'undefined') {
+            open = !data.open;
+        }
+        data.open = open;
+
         this.setPosition(!open);
 
-        this.supr(open);
+        var index = Upload.opens.indexOf(this);
+        if (open && index < 0) {
+            Upload.opens.push(this);
+        } else if (!open && index >= 0) {
+            Upload.opens.splice(index, 1);
+        }
     },
 
     setPosition: function(hidden) {
@@ -369,5 +388,29 @@ var Upload = Dropdown.extend({
         filesBanner.style.left = '20px';
     }
 });
+
+var opens = Upload.opens = [];
+document.addEventListener('click', function(e) {
+    for (var len =  opens.length, i = len - 1; i >= 0; i--) {
+        var close = true;
+
+        var upload = opens[i];
+        var uploadElement = upload.$refs.element;
+        var iterator = e.target;
+
+        while (iterator) {
+            if(uploadElement == iterator) {
+                close = false;
+                break;
+            }
+            iterator = iterator.parentElement;
+        }
+
+        if (close) {
+            upload.toggle(false);
+            upload.$update();
+        }
+    }
+}, false);
 
 module.exports = Upload;

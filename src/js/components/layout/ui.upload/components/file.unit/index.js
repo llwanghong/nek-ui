@@ -77,11 +77,14 @@ var FileUnit = Component.extend({
     uploadFile: function(file) {
         var self = this,
             data = this.data;
+        
+        data.info = '';
 
         var options = {
             upload: {
                 onload: function(e) {
                     data.status = 'uploaded';
+                    data.info = '';
                     data.progress = '100%';
                     self.$update();
                     self.$emit('success', { progress: data.progress });

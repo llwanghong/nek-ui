@@ -1,6 +1,6 @@
-<div class="m-upload">
+<div class="m-upload" ref="element">
     <div class="m-files-zone">
-        <div ref="filesentry" class="m-entry" r-hide={fileList.length === 0} on-click={this.toggle(!open, $event)}>
+        <div ref="filesentry" class="m-entry" r-hide={fileList.length === 0} on-click={this.toggle()}>
             {#if fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type === 'IMAGE'}
                 <div class="m-img-wrapper">
                     <img class="u-img" src={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.src} alt={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.name}/>
