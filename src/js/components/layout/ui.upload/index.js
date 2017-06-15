@@ -31,10 +31,11 @@ var UIUpload = Component.extend({
             multiple: false,
             drag: false,
             accept: '*',
-            componentName: 'list',
+            listType: 'list',
             data: {},
             numLimit: 10,
-            numPerline: 3
+            numPerline: 3,
+            maxSize: 1000000
         });
         
         this.supr(data);
@@ -47,11 +48,11 @@ var UIUpload = Component.extend({
 
     initData: function(data) {
         var upload = this.$refs['m-upload'];
-        if (data.componentName === 'list') {
+        if (data.listType === 'list') {
             new UploadList({
                 data: data
             }).$inject(upload);
-        } else if (data.componentName === 'hover') {
+        } else if (data.listType === 'hover') {
             new Upload({
                 data: data
             }).$inject(upload);

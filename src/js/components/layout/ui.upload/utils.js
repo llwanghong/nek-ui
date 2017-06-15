@@ -35,30 +35,20 @@ function ajax(options) {
         xhr.setRequestHeader(key, headers[key]);
     }
 
-    var onerror = options.onerror || function(e) {
-        console.log('error', e);
-    };
+    var onerror = options.onerror || function(e) {};
     
-    var onload = options.onload || function(e) {
-        console.log('loaded', e);
-    };
+    var onload = options.onload || function(e) {};
     
-    var onprogress = options.onprogress || function(e) {
-        console.log('progress', e);
-    };
+    var onprogress = options.onprogress || function(e) {};
     
     xhr.addEventListener('load', onload);
     xhr.addEventListener('error', onerror);
     xhr.addEventListener('progress', onprogress);
     
     if (options.upload) {
-        var onuploadLoad = options.upload.onload || function(e) {
-            console.log('upload loaded', e);
-        };
+        var onuploadLoad = options.upload.onload || function(e) {};
 
-        var onuploadProgress = options.upload.onprogress || function(e) {
-            console.log('upload progress', e);
-        };
+        var onuploadProgress = options.upload.onprogress || function(e) {};
 
         xhr.upload.addEventListener('load', onuploadLoad);
         xhr.upload.addEventListener('progress', onuploadProgress);

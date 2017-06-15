@@ -39,6 +39,7 @@ var Upload = Component.extend({
         
         _.extend(data, {
             status: 'uploaded',
+            info: '',
             fileList: [],
             fileUnitWidth: 50,
             fileUnitMargin: 25,
@@ -202,6 +203,7 @@ var Upload = Component.extend({
 
         fileunit.$on('error', function(info) {
             self.data.status = 'failed';
+            self.data.info = '上传失败';
             self.$update();
         });
         
@@ -282,6 +284,7 @@ var Upload = Component.extend({
             fileList = data.fileList;
         
         data.status = 'uploaded';
+        data.info = '';
         
         fileList.forEach(function(item) {
             var inst = item.inst,
@@ -293,7 +296,9 @@ var Upload = Component.extend({
         });
     },
 
-    toggle: function (open) {
+    toggle: function (open, e) {
+        e && e.stopPropagation();
+        
         var data = this.data;
         if (typeof open === 'undefined') {
             open = !data.open;
@@ -386,6 +391,43 @@ var Upload = Component.extend({
         }
         
         filesBanner.style.left = '20px';
+    },
+    isValidFileType: function(file) {
+        var data = this.data,
+            accept = data.accept,
+            type = this.getFileType(file).toLowerCase();
+
+        if (/\*/.test(accept)) {
+            return true;
+        } else {
+            return accept.split(',').indexOf(type) > -1;
+        }
+    },
+    getFileType: function(file) {
+        var type = file.type || '';
+        name = file.name || '';
+
+        if (/image\/.*/.test(type)) {
+            return 'IMAGE';
+        } else if (/document|sheet/.test(type)) {
+            return 'DOC';
+        } else if (/text\/plain/.test(type)) {
+            return 'TEXT';
+        } else if (/text\/html/.test(type)) {
+            return 'HTML';
+        } else if (/application\/pdf/.test(type)) {
+            return 'PDF';
+        } else if (/application\/javascript/.test(type)) {
+            return 'JS';
+        }
+
+        if (type === '') {
+            if (/zip|rar|gz/i.test(name)) {
+                return 'ZIP';
+            }
+        }
+
+        return 'UNKNOWN';
     }
 });
 
@@ -407,7 +449,7 @@ document.addEventListener('click', function(e) {
         }
 
         if (close) {
-            upload.toggle(false);
+            upload.toggle(false, e);
             upload.$update();
         }
     }

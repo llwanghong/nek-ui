@@ -22,6 +22,16 @@ var ImagePreview = Component.extend({
         });
 
         _.extend(data, {
+            showVirtual: false,
+            virtualInfo: {
+                rotate: 0,
+                scale: 1,
+                translateX: 0,
+                translateY: 0,
+                mouseDownX: 0,
+                mouseDownY: 0,
+                dragTarget: null
+            },
             opList: [
                 {
                     name: 'zoomIn',
@@ -89,26 +99,105 @@ var ImagePreview = Component.extend({
             imgList = data.imgList,
             curIndex = data.curIndex;
         
+        data.showVirtual = false;
+        data.virtualInfo.scale = 1;
+        data.virtualInfo.rotate = 0;
+        data.virtualInfo.translateX = 0;
+        data.virtualInfo.translateY = 0;
+
         refs['full-' + curIndex].style.opacity = 0;
         refs['full-' + toIndex].style.opacity = 1;
         
         this.data.curIndex = toIndex;
     },
     zoomIn: function() {
+        var data = this.data,
+            virtualInfo = data.virtualInfo,
+            step = this.getZoomInStep();
         
+        data.showVirtual = true;
+        
+        virtualInfo.scale += step;
+
+        this.$refs['virtualimage'].style.transform = this.genTransform();
     },
     zoomOut: function() {
+        var data = this.data,
+            virtualInfo = data.virtualInfo,
+            step = this.getZoomOutStep();
 
+        data.showVirtual = true;
+
+        virtualInfo.scale -= step;
+
+        this.$refs['virtualimage'].style.transform = this.genTransform();
     },
     rezoom: function() {
+        var data = this.data,
+            virtualInfo = data.virtualInfo;
 
+        data.showVirtual = true;
+
+        virtualInfo.scale = 1;
+        virtualInfo.translateX = 0;
+        virtualInfo.translateY = 0;
+
+        this.$refs['virtualimage'].style.transform = this.genTransform();
+    },
+    getZoomInStep: function() {
+        var virtualInfo = this.data.virtualInfo,
+            scale = +(virtualInfo.scale).toFixed(1),
+            step = this.getScaleStep();
+        
+        if (scale <= 0.1) {
+            return 0.1;
+        } else {
+            return step;
+        }
+    },
+    getZoomOutStep: function() {
+        var virtualInfo = this.data.virtualInfo,
+            scale = +(virtualInfo.scale).toFixed(1),
+            step = this.getScaleStep();
+
+        if (scale >= 10) {
+            return 1;
+        } else {
+            return step;
+        }
+    },
+    getScaleStep: function() {
+        var virtualInfo = this.data.virtualInfo,
+            scale = +(virtualInfo.scale).toFixed(1),
+            step = 0.1;
+
+        if (scale > 0.1 && scale < 1.5) {
+            return 0.1;
+        } else if (scale >= 1.5 && scale < 4) {
+            return 0.5;
+        } else if (scale >= 4 && scale < 10) {
+            return 1;
+        } else {
+            return 0; 
+        }
     },
     rotate: function(index) {
         var data = this.data,
-            img = this.$refs['full-img-' + index];
+            virtualInfo = data.virtualInfo,
+            img = this.$refs['virtualimage'];
 
-        img.rotate = img.rotate ? img.rotate + 90 : 90;
-        img.style.transform = 'rotate(' + img.rotate + 'deg)';
+        data.showVirtual = true;
+        virtualInfo.rotate += 90;
+        
+        img.style.transform = this.genTransform();
+    },
+    genTransform: function() {
+        var virtualInfo = this.data.virtualInfo;
+
+        return 'translateX(' + virtualInfo.translateX + 'px)'
+            + ' translateY(' + virtualInfo.translateY + 'px)'
+            + ' rotate(' + virtualInfo.rotate + 'deg)'
+            + ' scale(' + virtualInfo.scale + ')';
     },
     onDel: function(index) {
         var self = this,
@@ -155,6 +244,67 @@ var ImagePreview = Component.extend({
             });
             self.$update();
         });
+    },
+    onMouseDown: function(e) {
+        var data = this.data,
+            virtualInfo = data.virtualInfo;
+        
+        virtualInfo.mouseDownX = e.pageX;
+        virtualInfo.mouseDownY = e.pageY;
+        virtualInfo.dragTarget = e.origin;
+        virtualInfo.dragBoundary = this.getMaxMinTranslateValue();
+    },
+    onMouseMove: function(e) {
+        var data = this.data,
+            virtualImg = this.$refs['virtualimage'],
+            virtualInfo = data.virtualInfo,
+            originX = virtualInfo.mouseDownX,
+            originY = virtualInfo.mouseDownY,
+            boundary = virtualInfo.dragBoundary = this.getMaxMinTranslateValue();
+        
+        if (virtualInfo.dragTarget) {
+            var translateX = e.pageX - originX;
+            var translateY = e.pageY - originY;
+            translateX  = translateX > boundary.maxTranslateX 
+                ? boundary.maxTranslateX
+                : translateX < boundary.minTranslateX ? boundary.minTranslateX : translateX;
+            
+            translateY  = translateY > boundary.maxTranslateY
+                ? boundary.maxTranslateY
+                : translateY < boundary.minTranslateY ? boundary.minTranslateY : translateY;
+
+            virtualInfo.translateX += translateX;
+            virtualInfo.translateY += translateY;
+            virtualInfo.mouseDownX = e.pageX;
+            virtualInfo.mouseDownY = e.pageY;
+            virtualImg.style.transform = this.genTransform();
+        }
+    },
+    onMouseUp: function(e) {
+        var data = this.data,
+            virtualInfo = data.virtualInfo;
+
+        virtualInfo.mouseDownX = 0;
+        virtualInfo.mouseDownY = 0;
+        virtualInfo.dragTarget = null;
+    },
+    getMaxMinTranslateValue: function() {
+        var virtualImg = this.$refs['virtualimage'],
+            virtualZone = this.$refs['virtualzone'];
+
+        var virtualImgRect = virtualImg.getBoundingClientRect();
+        var virtualZoneRect = virtualZone.getBoundingClientRect();
+        var maxDeltaX = virtualZoneRect.left - virtualImgRect.left;
+        var maxDeltaY = virtualZoneRect.top - virtualImgRect.top;
+        var minDeltaX = virtualZoneRect.right - virtualImgRect.right;
+        var minDeltaY = virtualZoneRect.bottom - virtualImgRect.bottom;
+        
+        return {
+            maxTranslateX: maxDeltaX > 0 ? maxDeltaX : 0,
+            maxTranslateY: maxDeltaY > 0 ? maxDeltaY : 0,
+            minTranslateX: minDeltaX < 0 ? minDeltaX : 0,
+            minTranslateY: minDeltaY < 0 ? minDeltaY : 0 
+        };
     }
 });
 
