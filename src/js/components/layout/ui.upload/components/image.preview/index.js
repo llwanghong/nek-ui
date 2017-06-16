@@ -9,12 +9,12 @@
 var Component = require('../../../../../ui-base/component');
 var _ = require('../../../../../ui-base/_');
 var Modal = require('../../../../notice/modal');
-var  tpl = require('./index.html');
+var tpl = require('./index.html');
 
 var ImagePreview = Component.extend({
     name: 'image.preview',
     template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
-    config: function (data) {
+    config: function(data) {
         _.extend(data, {
             imgList: [],
             curIndex: 0,
@@ -63,7 +63,7 @@ var ImagePreview = Component.extend({
 
         this.supr(data);
     },
-    init: function (data) {
+    init: function(data) {
         this.supr(data);
     },
     onClose: function() {
@@ -96,7 +96,6 @@ var ImagePreview = Component.extend({
     setCurrentTo: function(toIndex) {
         var data = this.data,
             refs = this.$refs,
-            imgList = data.imgList,
             curIndex = data.curIndex;
         
         data.showVirtual = false;
@@ -119,7 +118,7 @@ var ImagePreview = Component.extend({
         
         virtualInfo.scale += step;
 
-        this.$refs['virtualimage'].style.transform = this.genTransform();
+        this.$refs.virtualimage.style.transform = this.genTransform();
     },
     zoomOut: function() {
         var data = this.data,
@@ -130,7 +129,7 @@ var ImagePreview = Component.extend({
 
         virtualInfo.scale -= step;
 
-        this.$refs['virtualimage'].style.transform = this.genTransform();
+        this.$refs.virtualimage.style.transform = this.genTransform();
     },
     rezoom: function() {
         var data = this.data,
@@ -142,7 +141,7 @@ var ImagePreview = Component.extend({
         virtualInfo.translateX = 0;
         virtualInfo.translateY = 0;
 
-        this.$refs['virtualimage'].style.transform = this.genTransform();
+        this.$refs.virtualimage.style.transform = this.genTransform();
     },
     getZoomInStep: function() {
         var virtualInfo = this.data.virtualInfo,
@@ -151,9 +150,9 @@ var ImagePreview = Component.extend({
         
         if (scale <= 0.1) {
             return 0.1;
-        } else {
-            return step;
         }
+        
+        return step;
     },
     getZoomOutStep: function() {
         var virtualInfo = this.data.virtualInfo,
@@ -162,14 +161,13 @@ var ImagePreview = Component.extend({
 
         if (scale >= 10) {
             return 1;
-        } else {
-            return step;
         }
+        
+        return step;
     },
     getScaleStep: function() {
         var virtualInfo = this.data.virtualInfo,
-            scale = +(virtualInfo.scale).toFixed(1),
-            step = 0.1;
+            scale = +(virtualInfo.scale).toFixed(1);
 
         if (scale > 0.1 && scale < 1.5) {
             return 0.1;
@@ -177,14 +175,14 @@ var ImagePreview = Component.extend({
             return 0.5;
         } else if (scale >= 4 && scale < 10) {
             return 1;
-        } else {
-            return 0; 
         }
+        
+        return 0; 
     },
-    rotate: function(index) {
+    rotate: function() {
         var data = this.data,
             virtualInfo = data.virtualInfo,
-            img = this.$refs['virtualimage'];
+            img = this.$refs.virtualimage;
 
         data.showVirtual = true;
         virtualInfo.rotate += 90;
@@ -209,30 +207,8 @@ var ImagePreview = Component.extend({
             data: {
                 content: '确认删除' + img.name + '?'
             }
-        }).$on('ok', function() {
-            imgList = data.imgList.splice(index, 1);
-
-            if (!imgList[index]) {
-                data.curIndex = 0;
-            }
-            self.$emit('delete', {
-                name: img.name,
-                index: index
-            });
-            self.$update();
         });
-    },
-    onDownload: function(index) {
-        var self = this,
-            data = this.data,
-            imgList = data.imgList,
-            img = imgList[index];
-
-        var modal = new Modal({
-            data: {
-                content: '确认删除' + img.name + '?'
-            }
-        }).$on('ok', function() {
+        modal.$on('ok', function() {
             imgList = data.imgList.splice(index, 1);
 
             if (!imgList[index]) {
@@ -256,7 +232,7 @@ var ImagePreview = Component.extend({
     },
     onMouseMove: function(e) {
         var data = this.data,
-            virtualImg = this.$refs['virtualimage'],
+            virtualImg = this.$refs.virtualimage,
             virtualInfo = data.virtualInfo,
             originX = virtualInfo.mouseDownX,
             originY = virtualInfo.mouseDownY,
@@ -265,11 +241,11 @@ var ImagePreview = Component.extend({
         if (virtualInfo.dragTarget) {
             var translateX = e.pageX - originX;
             var translateY = e.pageY - originY;
-            translateX  = translateX > boundary.maxTranslateX 
+            translateX = translateX > boundary.maxTranslateX 
                 ? boundary.maxTranslateX
                 : translateX < boundary.minTranslateX ? boundary.minTranslateX : translateX;
             
-            translateY  = translateY > boundary.maxTranslateY
+            translateY = translateY > boundary.maxTranslateY
                 ? boundary.maxTranslateY
                 : translateY < boundary.minTranslateY ? boundary.minTranslateY : translateY;
 
@@ -280,7 +256,7 @@ var ImagePreview = Component.extend({
             virtualImg.style.transform = this.genTransform();
         }
     },
-    onMouseUp: function(e) {
+    onMouseUp: function() {
         var data = this.data,
             virtualInfo = data.virtualInfo;
 
@@ -289,8 +265,8 @@ var ImagePreview = Component.extend({
         virtualInfo.dragTarget = null;
     },
     getMaxMinTranslateValue: function() {
-        var virtualImg = this.$refs['virtualimage'],
-            virtualZone = this.$refs['virtualzone'];
+        var virtualImg = this.$refs.virtualimage,
+            virtualZone = this.$refs.virtualzone;
 
         var virtualImgRect = virtualImg.getBoundingClientRect();
         var virtualZoneRect = virtualZone.getBoundingClientRect();

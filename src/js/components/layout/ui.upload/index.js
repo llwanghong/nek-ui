@@ -5,11 +5,11 @@
  */
 'use strict';
 
-var  Component = require('../../../ui-base/component');
-var  _ = require('../../../ui-base/_');
-var  UploadList = require('./components/upload.list');
-var  UploadCard = require('./components/upload.card');
-var  tpl = require('./index.html');
+var Component = require('../../../ui-base/component');
+var _ = require('../../../ui-base/_');
+var UploadList = require('./components/upload.list');
+var UploadCard = require('./components/upload.card');
+var tpl = require('./index.html');
 
 /**
  * @class UIUpload

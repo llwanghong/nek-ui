@@ -32,8 +32,6 @@ var FileUnit = Component.extend({
         this.supr(data);
     },
     
-    init: function(data) {},
-    
     initData: function(data) {
         var file = data.file;
         data.name = this.getFileName(file);
@@ -48,7 +46,7 @@ var FileUnit = Component.extend({
     },
     
     getFileType: function(file) {
-        var type = file.type || '';
+        var type = file.type || '',
             name = file.name || '';
         
         if (/image\/.*/.test(type)) {
@@ -82,7 +80,7 @@ var FileUnit = Component.extend({
 
         var options = {
             upload: {
-                onload: function(e) {
+                onload: function() {
                     data.status = 'uploaded';
                     data.info = '';
                     data.progress = '100%';
@@ -96,7 +94,9 @@ var FileUnit = Component.extend({
                     self.$emit('progress', { progress: data.progress });
                 }
             },
-            onload: function(e) {},
+            onload: function(e) {
+                self.$emit('onload', { info: e });
+            },
             onerror: function(e) {
                 data.status = 'failed';
                 data.info = '上传失败';
@@ -109,7 +109,7 @@ var FileUnit = Component.extend({
         upload(options.url, file, options);
     },
     
-    onDelete: function () {
+    onDelete: function() {
         var self = this,
             data = this.data;
         
@@ -118,7 +118,8 @@ var FileUnit = Component.extend({
                 data: {
                     content: '确认删除' + data.name + '?'
                 }
-            }).$on('ok', function() {
+            });
+            modal.$on('ok', function() {
                 self.$emit('delete');
             });
         } else {

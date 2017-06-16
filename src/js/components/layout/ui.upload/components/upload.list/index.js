@@ -5,11 +5,11 @@
  */
 'use strict';
 
-var  Component = require('../../../../../ui-base/component');
-var  _ = require('../../../../../ui-base/_');
-var  FileUnit = require('../file.unit');
-var  ImagePreview = require('../image.preview');
-var  tpl = require('./index.html');
+var Component = require('../../../../../ui-base/component');
+var _ = require('../../../../../ui-base/_');
+var FileUnit = require('../file.unit');
+var ImagePreview = require('../image.preview');
+var tpl = require('./index.html');
 
 /**
  * @class UploadList
@@ -46,7 +46,7 @@ var UploadList = Component.extend({
         _.extend(data, {
             fileList: [],
             fileUnitWidth: 50,
-            fileUnitMargin: 25,
+            fileUnitMargin: 25
         });
         
         this.supr(data);
@@ -61,7 +61,7 @@ var UploadList = Component.extend({
         var inputWrapper = this.data.inputWrapper = this.$refs.inputwrapper;
         var filesWrapper = this.data.filesWrapper = this.$refs.fileswrapper;
         filesWrapper.appendChild(inputWrapper);
-        inputWrapper.style.display = "inline-block";
+        inputWrapper.style.display = 'inline-block';
     },
     
     fileDialogOpen: function() {
@@ -69,8 +69,7 @@ var UploadList = Component.extend({
     },
     
     fileSelect: function() {
-        var self = this,
-            data = this.data,
+        var data = this.data,
             inputNode = this.$refs.file,
             files = inputNode.files,
             index = 0,
@@ -124,12 +123,12 @@ var UploadList = Component.extend({
         });
         
         function createImagePreview(imgFileList) {
-            function findHelper(img, index) {
+            function findHelper(img) {
                 return img.current;
             }
             var curIndex = imgFileList.findIndex(findHelper);
             
-            function mapHelper(img, index) {
+            function mapHelper(img) {
                 delete img.current;
                 return {
                     src: img.data.src,
@@ -162,7 +161,7 @@ var UploadList = Component.extend({
             return imagePreview;
         }
         
-        fileunit.$on('delete', function () {
+        fileunit.$on('delete', function() {
             this.destroy();
             self.updateFileList();
         });
@@ -178,7 +177,6 @@ var UploadList = Component.extend({
     updateFileList: function() {
         var self = this,
             data = this.data,
-            inputWrapper = data.inputWrapper,
             filesWrapper = data.filesWrapper,
             fileList;
        
@@ -242,7 +240,7 @@ var UploadList = Component.extend({
         }
     },
     
-    setOptions: function (data) {
+    setOptions: function(data) {
         data = data || {};
         
         return {

@@ -76,8 +76,7 @@ var UploadCard= Component.extend({
     },
     
     fileSelect: function() {
-        var self = this,
-            data = this.data,
+        var data = this.data,
             inputNode = this.$refs.file,
             files = inputNode.files,
             index = 0,
@@ -133,12 +132,12 @@ var UploadCard= Component.extend({
         }
 
         function createImagePreview(imgFileList) {
-            function findHelper(img, index) {
+            function findHelper(img) {
                 return img.current;
             }
             var curIndex = imgFileList.findIndex(findHelper);
             
-            function mapHelper(img, index) {
+            function mapHelper(img) {
                 delete img.current;
                 return {
                     src: img.data.src,
@@ -208,7 +207,7 @@ var UploadCard= Component.extend({
             }
         }
 
-        fileunit.$on('error', function(info) {
+        fileunit.$on('error', function() {
             self.data.status = 'failed';
             self.data.info = '上传失败';
             self.$update();
@@ -278,7 +277,7 @@ var UploadCard= Component.extend({
         }
     },
     
-    setOptions: function (data) {
+    setOptions: function(data) {
         data = data || {};
         
         return {
@@ -303,7 +302,7 @@ var UploadCard= Component.extend({
         });
     },
 
-    toggle: function (open, e) {
+    toggle: function(open, e) {
         e && e.stopPropagation();
         
         var data = this.data;
@@ -323,8 +322,8 @@ var UploadCard= Component.extend({
     },
 
     setPosition: function(hidden) {
-        var filesBanner = this.$refs['filesbanner'];
-        var filesWrapper = this.$refs['fileswrapper'];
+        var filesBanner = this.$refs.filesbanner;
+        var filesWrapper = this.$refs.fileswrapper;
         if (hidden) {
             filesBanner.style.left = '-9999px';
             filesWrapper.style.left = '-9999px';
@@ -334,17 +333,14 @@ var UploadCard= Component.extend({
         this.setHorizontalPosition();
     },
     
-    setVerticalPosition: function(style) {
-        var filesEntry = this.$refs['filesentry'];
+    setVerticalPosition: function() {
+        var filesEntry = this.$refs.filesentry;
         var filesEntryCoors = filesEntry.getBoundingClientRect();
-        var filesWrapper = this.$refs['fileswrapper'];
+        var filesWrapper = this.$refs.fileswrapper;
         var filesWrapperCoors = filesWrapper.getBoundingClientRect();
-        var viewHeight = document.documentElement.clientHeight;
-        var viewWidth = document.documentElement.clientWidth;
         
         // show at vertical bottom side
         var vertical = 'bottom';
-        var isVerticalBottomSide = filesEntryCoors.bottom + filesWrapperCoors.height < viewHeight;
         // show at vertical top side
         var isVerticalTopSide = filesEntryCoors.top - filesWrapperCoors.height > 0;
         if (isVerticalTopSide) {
@@ -366,12 +362,11 @@ var UploadCard= Component.extend({
     },
     
     setHorizontalPosition: function() {
-        var filesEntry = this.$refs['filesentry'];
+        var filesEntry = this.$refs.filesentry;
         var filesEntryCoors = filesEntry.getBoundingClientRect();
-        var filesBanner = this.$refs['filesbanner'];
-        var filesWrapper = this.$refs['fileswrapper'];
+        var filesBanner = this.$refs.filesbanner;
+        var filesWrapper = this.$refs.fileswrapper;
         var filesWrapperCoors = filesWrapper.getBoundingClientRect();
-        var viewHeight = document.documentElement.clientHeight;
         var viewWidth = document.documentElement.clientWidth;
         
         // show at central
@@ -406,13 +401,13 @@ var UploadCard= Component.extend({
 
         if (/\*/.test(accept)) {
             return true;
-        } else {
-            return accept.split(',').indexOf(type) > -1;
         }
+        
+        return accept.split(',').indexOf(type) > -1;
     },
     getFileType: function(file) {
-        var type = file.type || '';
-        name = file.name || '';
+        var type = file.type || '',
+            name = file.name || '';
 
         if (/image\/.*/.test(type)) {
             return 'IMAGE';
@@ -440,7 +435,7 @@ var UploadCard= Component.extend({
 
 var opens = UploadCard.opens = [];
 document.addEventListener('click', function(e) {
-    for (var len =  opens.length, i = len - 1; i >= 0; i--) {
+    for (var len = opens.length, i = len - 1; i >= 0; i--) {
         var close = true;
 
         var upload = opens[i];

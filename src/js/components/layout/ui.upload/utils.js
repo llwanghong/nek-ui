@@ -11,11 +11,13 @@ function upload(url, data, options) {
     if (data instanceof File) {
         data = {
             file: data
-        }
+        };
     }
 
     for (var key in data) {
-        fd.append(key, data[key]);
+        if (data.hasOwnProperty(key)) {
+            fd.append(key, data[key]);
+        }
     }
     
     options.url = url;
@@ -32,23 +34,26 @@ function ajax(options) {
     xhr.open(options.type, options.url, options.async);
     
     for (var key in headers) {
-        xhr.setRequestHeader(key, headers[key]);
+        if (headers.hasOwnProperty(key)) {
+            xhr.setRequestHeader(key, headers[key]);
+        }
     }
 
-    var onerror = options.onerror || function(e) {};
+    var noop = function() {};
+    var onerror = options.onerror || noop;
     
-    var onload = options.onload || function(e) {};
+    var onload = options.onload || noop;
     
-    var onprogress = options.onprogress || function(e) {};
+    var onprogress = options.onprogress || noop;
     
     xhr.addEventListener('load', onload);
     xhr.addEventListener('error', onerror);
     xhr.addEventListener('progress', onprogress);
     
     if (options.upload) {
-        var onuploadLoad = options.upload.onload || function(e) {};
+        var onuploadLoad = options.upload.onload || noop;
 
-        var onuploadProgress = options.upload.onprogress || function(e) {};
+        var onuploadProgress = options.upload.onprogress || noop;
 
         xhr.upload.addEventListener('load', onuploadLoad);
         xhr.upload.addEventListener('progress', onuploadProgress);
