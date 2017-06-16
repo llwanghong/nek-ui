@@ -1,7 +1,7 @@
-<div class="m-image-preview">
+<div class="m-image-preview" on-mouseup={this.onMouseUp($event)}>
     <div class="m-panel-wrapper">
         <div class="m-panel-close" on-click={this.onClose()}></div>
-        <div class="m-full-panel">
+        <div class="m-full-panel" on-mousewheel={this.onMouseWheel($event)}>
             <span class="u-pre-btn" on-click={this.onPrev()}><i class="u-icon"></i></span>
             <ul class="m-image-list">
                 {#list imgList as img}

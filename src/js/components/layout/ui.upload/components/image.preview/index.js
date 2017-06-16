@@ -123,11 +123,14 @@ var ImagePreview = Component.extend({
     zoomOut: function() {
         var data = this.data,
             virtualInfo = data.virtualInfo,
-            step = this.getZoomOutStep();
+            step = this.getZoomOutStep(),
+            translateStepInfo = this.getTranslateStep(step);
 
         data.showVirtual = true;
 
         virtualInfo.scale -= step;
+        virtualInfo.translateX -= translateStepInfo.xStep;
+        virtualInfo.translateY -= translateStepInfo.yStep;
 
         this.$refs.virtualimage.style.transform = this.genTransform();
     },
@@ -176,8 +179,21 @@ var ImagePreview = Component.extend({
         } else if (scale >= 4 && scale < 10) {
             return 1;
         }
+
+        return 0;
+    },
+    getTranslateStep: function(scaleStep) {
+        var virtualInfo = this.data.virtualInfo,
+            scale = +(virtualInfo.scale).toFixed(1);
+
+        var totalSteps = (scale - 1) * 10;
+        var translateX = virtualInfo.translateX;
+        var translateY = virtualInfo.translateY;
         
-        return 0; 
+        return {
+            xStep: totalSteps ? translateX / totalSteps * scaleStep * 10 : 0,
+            yStep: totalSteps ? translateY / totalSteps * scaleStep * 10 : 0
+        };
     },
     rotate: function() {
         var data = this.data,
@@ -260,9 +276,19 @@ var ImagePreview = Component.extend({
         var data = this.data,
             virtualInfo = data.virtualInfo;
 
-        virtualInfo.mouseDownX = 0;
-        virtualInfo.mouseDownY = 0;
-        virtualInfo.dragTarget = null;
+        if (virtualInfo.dragTarget) {
+            virtualInfo.mouseDownX = 0;
+            virtualInfo.mouseDownY = 0;
+            virtualInfo.dragTarget = null;
+        }
+    },
+    onMouseWheel: function(e) {
+        console.log(e.wheelDelta);
+        if (e.wheelDelta == 1) {
+            this.zoomIn();
+        } else if (e.wheelDelta == -1) {
+            this.zoomOut();
+        }
     },
     getMaxMinTranslateValue: function() {
         var virtualImg = this.$refs.virtualimage,
