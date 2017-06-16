@@ -20,6 +20,10 @@ var  tpl = require('./index.html');
  * @param {boolean}        [options.data.multiple]         => 可选，是否支持多选
  * @param {boolean}        [options.data.drag]             => 可选，是否支持拖拽上传
  * @param {string}         [options.data.accept]           => 可选，接受上传的文件类型
+ * @param {string}         [options.data.listType]         => 可选，上传组件的展示形式
+ * @param {number}         [options.data.numLimit]         => 可选，最大允许上传文件的个数
+ * @param {number}         [options.data.numPerline]       => 可选，每行展示的文件个数
+ * @param {number}         [options.data.maxSize]          => 可选，上传文件大小的最大允许值
  */
 var UploadList = Component.extend({
     name: 'upload.list',
@@ -28,13 +32,15 @@ var UploadList = Component.extend({
         _.extend(data, {
             action: '',
             name: 'file',
-            contentType: 'multipart/form-data',
             multiple: false,
             drag: false,
             accept: '*',
+            listType: 'list',
             data: {},
             numLimit: 10,
-            numPerline: 3
+            numPerline: 3,
+            maxSize: 1000000,
+            encType: 'multipart/form-data'
         });
         
         _.extend(data, {

@@ -8,7 +8,7 @@
 var  Component = require('../../../ui-base/component');
 var  _ = require('../../../ui-base/_');
 var  UploadList = require('./components/upload.list');
-var  Upload = require('./components/upload.hover');
+var  UploadCard = require('./components/upload.card');
 var  tpl = require('./index.html');
 
 /**
@@ -20,6 +20,10 @@ var  tpl = require('./index.html');
  * @param {boolean}        [options.data.multiple]         => 可选，是否支持多选
  * @param {boolean}        [options.data.drag]             => 可选，是否支持拖拽上传
  * @param {string}         [options.data.accept]           => 可选，接受上传的文件类型
+ * @param {string}         [options.data.listType]         => 可选，上传组件的展示形式
+ * @param {number}         [options.data.numLimit]         => 可选，最大允许上传文件的个数
+ * @param {number}         [options.data.numPerline]       => 可选，每行展示的文件个数
+ * @param {number}         [options.data.maxSize]          => 可选，上传文件大小的最大允许值
  */
 var UIUpload = Component.extend({
     name: 'ui.upload',
@@ -27,7 +31,7 @@ var UIUpload = Component.extend({
     config: function(data) {
         _.extend(data, {
             action: '',
-            encType: 'multipart/form-data',
+            name: 'file',
             multiple: false,
             drag: false,
             accept: '*',
@@ -35,7 +39,8 @@ var UIUpload = Component.extend({
             data: {},
             numLimit: 10,
             numPerline: 3,
-            maxSize: 1000000
+            maxSize: 1000000,
+            encType: 'multipart/form-data'
         });
         
         this.supr(data);
@@ -47,16 +52,15 @@ var UIUpload = Component.extend({
     },
 
     initData: function(data) {
-        var upload = this.$refs['m-upload'];
-        if (data.listType === 'list') {
-            new UploadList({
-                data: data
-            }).$inject(upload);
-        } else if (data.listType === 'hover') {
-            new Upload({
-                data: data
-            }).$inject(upload);
-        }
+        var uploadNode = this.$refs['m-upload'],
+            typeMap = {
+                list: UploadList,
+                card: UploadCard
+            };
+        
+        new typeMap[data.listType]({
+            data: data
+        }).$inject(uploadNode);
     }
 });
 

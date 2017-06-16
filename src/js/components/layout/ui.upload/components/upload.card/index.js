@@ -1,5 +1,6 @@
 /**
  *  ------------------------------
+ *  upload.card 上传
  *  ------------------------------
  */
 'use strict';
@@ -11,7 +12,7 @@ var ImagePreview = require('../image.preview');
 var tpl = require('./index.html');
 
 /**
- * @class Upload
+ * @class UploadCard
  * @extend Component
  * @param {object}         [options.data]                  = 绑定属性
  * @param {string}         [options.data.action]           => 必选，上传地址
@@ -19,22 +20,28 @@ var tpl = require('./index.html');
  * @param {boolean}        [options.data.multiple]         => 可选，是否支持多选
  * @param {boolean}        [options.data.drag]             => 可选，是否支持拖拽上传
  * @param {string}         [options.data.accept]           => 可选，接受上传的文件类型
+ * @param {string}         [options.data.listType]         => 可选，上传组件的展示形式
+ * @param {number}         [options.data.numLimit]         => 可选，最大允许上传文件的个数
+ * @param {number}         [options.data.numPerline]       => 可选，每行展示的文件个数
+ * @param {number}         [options.data.maxSize]          => 可选，上传文件大小的最大允许值
  */
 
-var Upload = Component.extend({
-    name: 'upload',
+var UploadCard= Component.extend({
+    name: 'upload.card',
     template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
     config: function(data) {
         _.extend(data, {
             action: '',
             name: 'file',
-            contentType: 'multipart/form-data',
             multiple: false,
             drag: false,
             accept: '*',
+            listType: 'list',
             data: {},
             numLimit: 10,
-            numPerline: 3
+            numPerline: 3,
+            maxSize: 1000000,
+            encType: 'multipart/form-data'
         });
         
         _.extend(data, {
@@ -307,11 +314,11 @@ var Upload = Component.extend({
 
         this.setPosition(!open);
 
-        var index = Upload.opens.indexOf(this);
+        var index = UploadCard.opens.indexOf(this);
         if (open && index < 0) {
-            Upload.opens.push(this);
+            UploadCard.opens.push(this);
         } else if (!open && index >= 0) {
-            Upload.opens.splice(index, 1);
+            UploadCard.opens.splice(index, 1);
         }
     },
 
@@ -431,7 +438,7 @@ var Upload = Component.extend({
     }
 });
 
-var opens = Upload.opens = [];
+var opens = UploadCard.opens = [];
 document.addEventListener('click', function(e) {
     for (var len =  opens.length, i = len - 1; i >= 0; i--) {
         var close = true;
@@ -455,4 +462,4 @@ document.addEventListener('click', function(e) {
     }
 }, false);
 
-module.exports = Upload;
+module.exports = UploadCard;
