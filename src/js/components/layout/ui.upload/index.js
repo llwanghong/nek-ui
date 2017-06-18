@@ -9,6 +9,7 @@ var Component = require('../../../ui-base/component');
 var _ = require('../../../ui-base/_');
 var UploadList = require('./components/upload.list');
 var UploadCard = require('./components/upload.card');
+var Config = require('./config');
 var tpl = require('./index.html');
 
 /**
@@ -39,7 +40,7 @@ var UIUpload = Component.extend({
             data: {},
             numLimit: 10,
             numPerline: 3,
-            maxSize: 1000000,
+            maxSize: Config.sizeMap.GB,
             encType: 'multipart/form-data'
         });
         

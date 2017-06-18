@@ -9,6 +9,7 @@ var Component = require('../../../../../ui-base/component');
 var _ = require('../../../../../ui-base/_');
 var FileUnit = require('../file.unit');
 var ImagePreview = require('../image.preview');
+var Config = require('../../config');
 var tpl = require('./index.html');
 
 /**
@@ -40,7 +41,7 @@ var UploadCard= Component.extend({
             data: {},
             numLimit: 10,
             numPerline: 3,
-            maxSize: 1000000,
+            maxSize: Config.sizeMap.GB,
             encType: 'multipart/form-data'
         });
         
@@ -83,11 +84,23 @@ var UploadCard= Component.extend({
             len = files.length,
             file, fileunit, options;
         
+        this.toggle(false);
+        
         options = this.setOptions(data);
+        
+        data.preCheckInfo = '';
         
         for (; index < len; index++) {
             if (data.fileList.length < data.numLimit) {
                 file = files[index];
+                if (!this.isAcceptedFileSize(file)) {
+                    data.preCheckInfo = '文件过大';
+                    continue;
+                }
+                if (!this.isAcceptedFileType(file)) {
+                    data.preCheckInfo = '格式错误';
+                    continue;
+                }
                 fileunit = this.createFileUnit({
                     file: file,
                     options: options
@@ -394,25 +407,53 @@ var UploadCard= Component.extend({
         
         filesBanner.style.left = '20px';
     },
-    isValidFileType: function(file) {
+    isAcceptedFileType: function(file) {
         var data = this.data,
-            accept = data.accept,
-            type = this.getFileType(file).toLowerCase();
+            acceptArr = data.accept.split(','),
+            type = this.getFileType(file).toLowerCase(),
+            i = 0,
+            len = acceptArr.length,
+            accept = '';
 
-        if (/\*/.test(accept)) {
-            return true;
+        for (; i < len; i++) {
+            accept = acceptArr[i];
+            if (/\s*\*\s*/.test(accept)) {
+                return true;
+            } else if (/image\/.*/.test(accept)) {
+                return type === 'image';
+            } else if (/audio\/.*/.test(accept)) {
+                return type === 'audio';
+            } else if (/video\/.*/.test(accept)) {
+                return type === 'video';
+            } else {
+                return type === Config.typeMap[accept];
+            }
         }
-        
-        return accept.split(',').indexOf(type) > -1;
+
+        return false;
     },
     getFileType: function(file) {
         var type = file.type || '',
             name = file.name || '';
 
-        if (/image\/.*/.test(type)) {
+        if (   /image\/.*/.test(type)
+            || /jpg|gif|jpeg|png/i.test(name)
+            ) {
             return 'IMAGE';
-        } else if (/document|sheet/.test(type)) {
+        } else if (/zip|rar|gz/i.test(name)) {
+            return 'ZIP';
+        } else if (/document|sheet|powerpoint|msword/.test(type)
+                || /doc|xlsx|ppt/i.test(name)
+            ) {
             return 'DOC';
+        } else if (/video\/.*/.test(type)
+                || /mp4|mkv|rmvb/i.test(name)
+            ) {
+            return 'VIDEO';
+        } else if (/audio\/.*/.test(type)
+                || /mp3/i.test(name)
+            ) {
+            return 'AUDIO';
         } else if (/text\/plain/.test(type)) {
             return 'TEXT';
         } else if (/text\/html/.test(type)) {
@@ -423,13 +464,22 @@ var UploadCard= Component.extend({
             return 'JS';
         }
 
-        if (type === '') {
-            if (/zip|rar|gz/i.test(name)) {
-                return 'ZIP';
-            }
+        return 'UNKNOWN';
+    },
+    isAcceptedFileSize: function(file) {
+        var data = this.data,
+            maxSize = data.maxSize,
+            fileSize = file.size;
+        
+        var patterns = maxSize.match(/(\d+)(\D+)?/i);
+        var size = patterns[1];
+        var unit = patterns[2];
+
+        if (unit) {
+            size *= sizeMap[unit.toUpperCase()];
         }
 
-        return 'UNKNOWN';
+        return size >= fileSize;
     }
 });
 

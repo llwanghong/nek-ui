@@ -48,11 +48,25 @@ var FileUnit = Component.extend({
     getFileType: function(file) {
         var type = file.type || '',
             name = file.name || '';
-        
-        if (/image\/.*/.test(type)) {
+
+        if (   /image\/.*/.test(type)
+            || /jpg|gif|jpeg|png/i.test(name)
+            ) {
             return 'IMAGE';
-        } else if (/document|sheet/.test(type)) {
+        } else if (/zip|rar|gz/i.test(name)) {
+            return 'ZIP';
+        } else if (/document|sheet|powerpoint|msword/.test(type)
+                || /doc|xlsx|ppt/i.test(name)
+            ) {
             return 'DOC';
+        } else if (/video\/.*/.test(type)
+                || /mp4|mkv|rmvb/i.test(name)
+            ) {
+            return 'VIDEO';
+        } else if (/audio\/.*/.test(type)
+                || /mp3/i.test(name)
+            ) {
+            return 'AUDIO';
         } else if (/text\/plain/.test(type)) {
             return 'TEXT';
         } else if (/text\/html/.test(type)) {
@@ -63,12 +77,6 @@ var FileUnit = Component.extend({
             return 'JS';
         }
 
-        if (type === '') {
-            if (/zip|rar|gz/i.test(name)) {
-                return 'ZIP';
-            }
-        }
-        
         return 'UNKNOWN';
     },
     

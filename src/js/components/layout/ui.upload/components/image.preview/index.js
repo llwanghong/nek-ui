@@ -283,10 +283,9 @@ var ImagePreview = Component.extend({
         }
     },
     onMouseWheel: function(e) {
-        console.log(e.wheelDelta);
-        if (e.wheelDelta == 1) {
+        if (e.wheelDelta > 0) {
             this.zoomIn();
-        } else if (e.wheelDelta == -1) {
+        } else if (e.wheelDelta < 0) {
             this.zoomOut();
         }
     },
