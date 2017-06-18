@@ -409,28 +409,25 @@ var UploadCard= Component.extend({
     },
     isAcceptedFileType: function(file) {
         var data = this.data,
-            acceptArr = data.accept.split(','),
+            accept = data.accept,
             type = this.getFileType(file).toLowerCase(),
-            i = 0,
-            len = acceptArr.length,
-            accept = '';
+            isValid = false;
 
-        for (; i < len; i++) {
-            accept = acceptArr[i];
-            if (/\s*\*\s*/.test(accept)) {
+        accept.split(',').forEach(function(cond) {
+            if ('*' === cond) {
                 return true;
-            } else if (/image\/.*/.test(accept)) {
-                return type === 'image';
-            } else if (/audio\/.*/.test(accept)) {
-                return type === 'audio';
-            } else if (/video\/.*/.test(accept)) {
-                return type === 'video';
+            } else if (/image\/.*/.test(cond)) {
+                isValid = isValid || type === 'image';
+            } else if (/audio\/.*/.test(cond)) {
+                isValid = isValid || type === 'audio';
+            } else if (/video\/.*/.test(cond)) {
+                isValid = isValid || type === 'video';
             } else {
-                return type === Config.typeMap[accept];
+                isValid = isValid || type === Config.typeMap[cond];
             }
-        }
+        });
 
-        return false;
+        return isValid;
     },
     getFileType: function(file) {
         var type = file.type || '',

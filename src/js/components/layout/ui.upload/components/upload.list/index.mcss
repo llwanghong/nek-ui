@@ -40,5 +40,10 @@
                 vertical-align: middle;
             }
         }
+        .u-input-info {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #F86B6B;
+        }
     }
 }
