@@ -352,7 +352,7 @@ var UploadList = Component.extend({
 
     isAcceptedFileSize: function(file) {
         var data = this.data,
-            maxSize = data.maxSize + '',
+            maxSize = data.maxSize,
             fileSize = file.size;
         
         var patterns = maxSize.match(/(\d+)(\D+)?/i);

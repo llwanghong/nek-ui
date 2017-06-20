@@ -24,7 +24,7 @@ var tpl = require('./index.html');
  * @param {string}         [options.data.listType]         => 可选，上传组件的展示形式
  * @param {number}         [options.data.numLimit]         => 可选，最大允许上传文件的个数
  * @param {number}         [options.data.numPerline]       => 可选，每行展示的文件个数
- * @param {number}         [options.data.maxSize]          => 可选，上传文件大小的最大允许值
+ * @param {string}         [options.data.maxSize]          => 可选，上传文件大小的最大允许值
  */
 
 var UploadCard= Component.extend({
@@ -105,6 +105,9 @@ var UploadCard= Component.extend({
     fileSelect: function() {
         var data = this.data,
             inputNode = this.$refs.file,
+            filesZone = this.$refs.fileszone,
+            entryWrapper = this.$refs.entrywrapper,
+            inputWrapper = this.$refs.inputwrapper,
             files = inputNode.files,
             index = 0,
             len = files.length,
@@ -115,10 +118,18 @@ var UploadCard= Component.extend({
         options = this.setOptions(data);
         
         data.preCheckInfo = '';
-        
+
         for (; index < len; index++) {
             if (data.fileList.length < data.numLimit) {
+                filesZone.style.width = '125px';
+                entryWrapper.style['margin-right'] = '20px';
+                inputWrapper.style.display = 'inline-block';
+                
                 file = files[index];
+                data.preCheckInfo = this.preCheck(file);
+                if (data.preCheckInfo) {
+                    continue;
+                }
                 if (!this.isAcceptedFileSize(file)) {
                     data.preCheckInfo = '文件过大';
                     continue;
@@ -134,6 +145,13 @@ var UploadCard= Component.extend({
                 data.fileList.push({
                     inst: fileunit
                 });
+                
+                if (data.fileList.length == data.numLimit) {
+                    filesZone.style.width = '50px';
+                    entryWrapper.style['margin-right'] = '0';
+                    inputWrapper.style.display = 'none';
+                    break;
+                }
             }
         }
         
@@ -433,6 +451,18 @@ var UploadCard= Component.extend({
         
         filesBanner.style.left = '20px';
     },
+    
+    preCheck: function(file) {
+        var preCheckInfo = '';
+        if (!this.isAcceptedFileSize(file)) {
+            preCheckInfo = '文件过大';
+        }
+        if (!this.isAcceptedFileType(file)) {
+            preCheckInfo = '格式错误';
+        }
+        return preCheckInfo;
+    },
+    
     isAcceptedFileType: function(file) {
         var data = this.data,
             accept = data.accept,
@@ -455,6 +485,7 @@ var UploadCard= Component.extend({
 
         return isValid;
     },
+    
     getFileType: function(file) {
         var type = file.type || '',
             name = file.name || '';
@@ -489,9 +520,10 @@ var UploadCard= Component.extend({
 
         return 'UNKNOWN';
     },
+    
     isAcceptedFileSize: function(file) {
         var data = this.data,
-            maxSize = data.maxSize + '',
+            maxSize = data.maxSize,
             fileSize = file.size;
         
         var patterns = maxSize.match(/(\d+)(\D+)?/i);
