@@ -1,93 +1,46 @@
 ---
-title: 上传
+title: 上传组件
 ---
 
 ## 代码演示
 
-### 基本形式
+### 基本展示形式（列表形式）
 
 <!-- demo_start -->
 <div class="m-example"></div>
 
 ```xml
-<ui.upload title="上传组件"
-    action="http://127.0.0.1:3000/upload"
-    on-success={this._onSuccess($event)}
-    on-error={this._onError($event)} />
-```
-
-```javascript
-var component = new NEKUI.Component({
-    template: template,
-    _onSuccess: function($event) {
-        NEKUI.Notify.success($event.data);
-    },
-    _onError: function($event) {
-        NEKUI.Notify.error($event.message);
-    }
-});
+<ui.upload action='http://10.240.180.98:3000/upload'></ui.upload>
 ```
 <!-- demo_end -->
 
-<div class="u-message u-message-warning">
-    <i class="message_icon u-icon u-icon-warning-circle"></i> 注意：在IE中实现上传功能时，需要将响应头的`Content-Type`设置为`text/plain`或`text/html`，而不能是`application/json`，否则IE会提示用户下载返回的数据。
-</div>
-
-### 修改标题
+### 卡片展示形式
 
 <!-- demo_start -->
 <div class="m-example"></div>
 
 ```xml
-<uploader title="上传文件" url="/upload"
-    on-success={this._onSuccess($event)}
-    on-error={this._onError($event)} />
-```
-
-```javascript
-var component = new NEKUI.Component({
-    template: template,
-    _onSuccess: function($event) {
-        NEKUI.Notify.success($event.data);
-    },
-    _onError: function($event) {
-        NEKUI.Notify.error($event.message);
-    }
-});
+<ui.upload action='http://10.240.180.98:3000/upload' list-type="card"></ui.upload>
 ```
 <!-- demo_end -->
 
-### 按钮自定义
+### 基本展示形式，配置多选上传
 
 <!-- demo_start -->
 <div class="m-example"></div>
 
 ```xml
-<uploader url="/upload" on-success={this._onSuccess($event)} on-error={this._onError($event)}>
-    <a class="u-btn u-btn-primary">上传 <i class="u-icon u-icon-upload"></i></a>
-</uploader>
-```
-
-```javascript
-var component = new NEKUI.Component({
-    template: template,
-    _onSuccess: function($event) {
-        NEKUI.Notify.success($event.data);
-    },
-    _onError: function($event) {
-        NEKUI.Notify.error($event.message);
-    }
-});
+<ui.upload action='http://10.240.180.98:3000/upload' multiple={true}></ui.upload>
 ```
 <!-- demo_end -->
 
-### 禁用组件
+### 卡片展示形式，配置多选上传
 
 <!-- demo_start -->
 <div class="m-example"></div>
 
 ```xml
-<uploader url="/upload" disabled />
+<ui.upload action='http://10.240.180.98:3000/upload' list-type="card" multiple={true}></ui.upload>
 ```
 <!-- demo_end -->
 
@@ -97,21 +50,7 @@ var component = new NEKUI.Component({
 <div class="m-example"></div>
 
 ```xml
-<uploader url="/upload" extensions="jpg,gif,png"
-    on-success={this._onSuccess($event)}
-    on-error={this._onError($event)} />
-```
-
-```javascript
-var component = new NEKUI.Component({
-    template: template,
-    _onSuccess: function($event) {
-        NEKUI.Notify.success($event.data);
-    },
-    _onError: function($event) {
-        NEKUI.Notify.error($event.message);
-    }
-});
+<ui.upload action='http://10.240.180.98:3000/upload' file-list={list} accept=".jpg,.zip,video/*,audio/*"></ui.upload>
 ```
 <!-- demo_end -->
 
@@ -121,19 +60,47 @@ var component = new NEKUI.Component({
 <div class="m-example"></div>
 
 ```xml
-<uploader url="/upload" maxSize="10kB"
-    on-success={this._onSuccess($event)}
-    on-error={this._onError($event)} />
+<ui.upload action='http://10.240.180.98:3000/upload' max-size="830M"></ui.upload>
+```
+<!-- demo_end -->
+
+### 每行展示文件个数和总文件个数限制
+
+<!-- demo_start -->
+<div class="m-example"></div>
+
+```xml
+<ui.upload action='http://10.240.180.98:3000/upload' multiple={true} num-limit={15} num-perline={4}></ui.upload>
+```
+<!-- demo_end -->
+
+### 带有已上传文件的形式
+
+<!-- demo_start -->
+<div class="m-example"></div>
+
+```xml
+<ui.upload action='http://10.240.180.98:3000/upload' file-list={list}></ui.upload>
 ```
 
 ```javascript
 var component = new NEKUI.Component({
     template: template,
-    _onSuccess: function($event) {
-        NEKUI.Notify.success($event.data);
-    },
-    _onError: function($event) {
-        NEKUI.Notify.error($event.message);
+    data: {
+        list: [
+            {
+                name: 'kaola-logo.jpeg',
+                url: 'http://haitao.nos.netease.com/264271ddbec447288f17aef71119b1f4.png?imageView&thumbnail=220x0&quality=85&v=1'
+            },
+            {
+                name: '权限申请交互.rar',
+                url: 'http://jira.netease.com/secure/attachment/176692/%E6%9D%83%E9%99%90%E6%89%B9%E9%87%8F%E7%94%B3%E8%AF%B7%E4%BA%A4%E4%BA%92-%E7%94%B3%E8%AF%B7%E7%AF%AE.rar'
+            },
+            {
+                name: 'app-2dcode.jpeg',
+                url: 'http://mm.bst.126.net/images/index/2dcode-app.jpg'
+            }
+        ]
     }
 });
 ```
