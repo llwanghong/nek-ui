@@ -105,9 +105,6 @@ var UploadCard= Component.extend({
     fileSelect: function() {
         var data = this.data,
             inputNode = this.$refs.file,
-            filesZone = this.$refs.fileszone,
-            entryWrapper = this.$refs.entrywrapper,
-            inputWrapper = this.$refs.inputwrapper,
             files = inputNode.files,
             index = 0,
             len = files.length,
@@ -121,43 +118,46 @@ var UploadCard= Component.extend({
 
         for (; index < len; index++) {
             if (data.fileList.length < data.numLimit) {
-                filesZone.style.width = '125px';
-                entryWrapper.style['margin-right'] = '20px';
-                inputWrapper.style.display = 'inline-block';
                 
                 file = files[index];
                 data.preCheckInfo = this.preCheck(file);
                 if (data.preCheckInfo) {
                     continue;
                 }
-                if (!this.isAcceptedFileSize(file)) {
-                    data.preCheckInfo = '文件过大';
-                    continue;
-                }
-                if (!this.isAcceptedFileType(file)) {
-                    data.preCheckInfo = '格式错误';
-                    continue;
-                }
+                
                 fileunit = this.createFileUnit({
                     file: file,
                     options: options
                 });
+                
                 data.fileList.push({
                     inst: fileunit
                 });
-                
-                if (data.fileList.length == data.numLimit) {
-                    filesZone.style.width = '50px';
-                    entryWrapper.style['margin-right'] = '0';
-                    inputWrapper.style.display = 'none';
-                    break;
-                }
+
+                this.updateFilesZone();
             }
         }
         
         inputNode.value = '';
         
         this.updateFileList();
+    },
+    
+    updateFilesZone: function() {
+        var data = this.data,
+            filesZone = this.$refs.fileszone,
+            entryWrapper = this.$refs.entrywrapper,
+            inputWrapper = this.$refs.inputwrapper;
+        
+        if (data.fileList.length < data.numLimit) {
+            filesZone.style.width = '125px';
+            entryWrapper.style['margin-right'] = '20px';
+            inputWrapper.style.display = 'inline-block';
+        } else if (data.fileList.length == data.numLimit) {
+            filesZone.style.width = '50px';
+            entryWrapper.style['margin-right'] = '0';
+            inputWrapper.style.display = 'none';
+        }
     },
     
     createFileUnit: function(data) {
@@ -276,10 +276,12 @@ var UploadCard= Component.extend({
         });
         
         fileunit.$on('$destroy', function() {
+            self.toggle(false);
             this.destroyed = true;
             this.$off('preview', previewCb);
             this.$off('success', successCb);
             self.updateFileList();
+            self.updateFilesZone();
             resetStatus();
         });
 
@@ -395,21 +397,23 @@ var UploadCard= Component.extend({
         var filesEntryCoors = filesEntry.getBoundingClientRect();
         var filesWrapper = this.$refs.fileswrapper;
         var filesWrapperCoors = filesWrapper.getBoundingClientRect();
+        var viewHeight = document.documentElement.clientHeight;
         
         // show at vertical bottom side
         var vertical = 'bottom';
         // show at vertical top side
         var isVerticalTopSide = filesEntryCoors.top - filesWrapperCoors.height > 0;
-        if (isVerticalTopSide) {
+        var isVerticalBottomSide = filesEntryCoors.bottom + filesWrapperCoors.height < viewHeight;
+        if (isVerticalTopSide && !isVerticalBottomSide) {
             vertical = 'top';
         }
         
         if (vertical === 'bottom') {
+            this.data.isTopBanner = false;
             filesWrapper.style.top = '53px';
             filesWrapper.style.bottom = 'auto';
             filesWrapper.style.boxShadow = 'auto';
             filesWrapper.style.boxShadow = '0 2px 3px 0 rgba(0,0,0,0.1)';
-            this.data.isTopBanner = false;
         } else {
             this.data.isTopBanner = true;
             filesWrapper.style.top = 'auto';
