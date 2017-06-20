@@ -63,6 +63,11 @@ var UploadCard= Component.extend({
     },
 
     initData: function() {
+        this.initFilesZone();
+        this.initUploadedFileUnits();
+    },
+    
+    initFilesZone: function() {
         var data = this.data,
             numPerline = data.numPerline,
             fileUnitWidth = data.fileUnitWidth,
@@ -70,6 +75,27 @@ var UploadCard= Component.extend({
 
         data.filesWrapper = this.$refs.fileswrapper;
         data.fileListWidth = fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1);
+    },
+    
+    initUploadedFileUnits: function() {
+        var self = this,
+            data = this.data;
+
+        if (data.fileList.length > 0) {
+            var fileList = data.fileList.splice(0);
+            fileList.forEach(function(file) {
+                var fileunit = self.createFileUnit({
+                    file: file,
+                    options: {}
+                });
+
+                data.fileList.push({
+                    inst: fileunit
+                });
+            });
+
+            this.updateFileList();
+        }
     },
     
     fileDialogOpen: function() {
@@ -433,23 +459,23 @@ var UploadCard= Component.extend({
         var type = file.type || '',
             name = file.name || '';
 
-        if (   /image\/.*/.test(type)
+        if (/image\/.*/.test(type)
             || /jpg|gif|jpeg|png/i.test(name)
-            ) {
+        ) {
             return 'IMAGE';
         } else if (/zip|rar|gz/i.test(name)) {
             return 'ZIP';
         } else if (/document|sheet|powerpoint|msword/.test(type)
                 || /doc|xlsx|ppt/i.test(name)
-            ) {
+        ) {
             return 'DOC';
         } else if (/video\/.*/.test(type)
                 || /mp4|mkv|rmvb/i.test(name)
-            ) {
+        ) {
             return 'VIDEO';
         } else if (/audio\/.*/.test(type)
                 || /mp3/i.test(name)
-            ) {
+        ) {
             return 'AUDIO';
         } else if (/text\/plain/.test(type)) {
             return 'TEXT';
@@ -465,7 +491,7 @@ var UploadCard= Component.extend({
     },
     isAcceptedFileSize: function(file) {
         var data = this.data,
-            maxSize = data.maxSize,
+            maxSize = data.maxSize + '',
             fileSize = file.size;
         
         var patterns = maxSize.match(/(\d+)(\D+)?/i);
@@ -473,7 +499,7 @@ var UploadCard= Component.extend({
         var unit = patterns[2];
 
         if (unit) {
-            size *= sizeMap[unit.toUpperCase()];
+            size *= Config.sizeMap[unit.toUpperCase()];
         }
 
         return size >= fileSize;

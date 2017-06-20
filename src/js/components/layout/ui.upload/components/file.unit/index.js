@@ -36,9 +36,15 @@ var FileUnit = Component.extend({
         var file = data.file;
         data.name = this.getFileName(file);
         data.type = this.getFileType(file);
-        data.src = window.URL.createObjectURL(file);
         
-        this.uploadFile(file);
+        // for initial uploaded files
+        if (file.url) {
+            data.src = file.url;
+            data.status = 'uploaded';
+        } else {
+            data.src = window.URL.createObjectURL(file);
+            this.uploadFile(file);
+        }
     },
     
     getFileName: function(file) {
@@ -49,23 +55,23 @@ var FileUnit = Component.extend({
         var type = file.type || '',
             name = file.name || '';
 
-        if (   /image\/.*/.test(type)
+        if (/image\/.*/.test(type)
             || /jpg|gif|jpeg|png/i.test(name)
-            ) {
+        ) {
             return 'IMAGE';
         } else if (/zip|rar|gz/i.test(name)) {
             return 'ZIP';
         } else if (/document|sheet|powerpoint|msword/.test(type)
                 || /doc|xlsx|ppt/i.test(name)
-            ) {
+        ) {
             return 'DOC';
         } else if (/video\/.*/.test(type)
                 || /mp4|mkv|rmvb/i.test(name)
-            ) {
+        ) {
             return 'VIDEO';
         } else if (/audio\/.*/.test(type)
                 || /mp3/i.test(name)
-            ) {
+        ) {
             return 'AUDIO';
         } else if (/text\/plain/.test(type)) {
             return 'TEXT';

@@ -37,6 +37,7 @@ var UIUpload = Component.extend({
             drag: false,
             accept: '*',
             listType: 'list',
+            fileList: [],
             data: {},
             numLimit: 10,
             numPerline: 3,
@@ -48,11 +49,18 @@ var UIUpload = Component.extend({
     },
     
     init: function(data) {
-        this.initData(data);
+        this.preProcess(data);
+        this.initUploadInst(data);
         this.supr(data);
     },
+    
+    preProcess: function(data) {
+        if (typeof data.maxSize === 'number') {
+            data.maxSize += '';
+        }
+    },
 
-    initData: function(data) {
+    initUploadInst: function(data) {
         var uploadNode = this.$refs['m-upload'],
             typeMap = {
                 list: UploadList,
