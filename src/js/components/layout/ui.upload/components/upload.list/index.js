@@ -300,7 +300,7 @@ var UploadList = Component.extend({
 
         accept.split(',').forEach(function(cond) {
             if ('*' === cond) {
-                return true;
+                isValid = true;
             } else if (/image\/.*/.test(cond)) {
                 isValid = isValid || type === 'image';
             } else if (/audio\/.*/.test(cond)) {
