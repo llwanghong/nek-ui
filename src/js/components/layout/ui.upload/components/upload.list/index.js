@@ -39,7 +39,7 @@ var UploadList = Component.extend({
             listType: 'list',
             data: {},
             numLimit: 10,
-            numPerline: 3,
+            numPerline: 5,
             maxSize: Config.sizeMap.GB,
             encType: 'multipart/form-data'
         });
