@@ -71,7 +71,7 @@ var UploadCard = UploadBase.extend({
         data.filesWrapper = this.$refs.fileswrapper;
         data.fileListWidth = fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1);
     },
-    
+
     fileSelect: function() {
         var data = this.data,
             inputNode = this.$refs.file,
@@ -81,29 +81,25 @@ var UploadCard = UploadBase.extend({
             file, fileunit, options;
         
         this.toggle(false);
-        
+
         options = this.setOptions(data);
         
         data.preCheckInfo = '';
 
         for (; index < len; index++) {
             if (data.fileList.length < data.numLimit) {
-                
                 file = files[index];
                 data.preCheckInfo = this.preCheck(file);
                 if (data.preCheckInfo) {
                     continue;
                 }
-                
                 fileunit = this.createFileUnit({
                     file: file,
                     options: options
                 });
-                
                 data.fileList.push({
                     inst: fileunit
                 });
-
                 this.updateFilesZone();
             }
         }
@@ -306,14 +302,6 @@ var UploadCard = UploadBase.extend({
         }
     },
     
-    setOptions: function(data) {
-        data = data || {};
-        
-        return {
-            url: data.action
-        };
-    },
-    
     uploadFiles: function() {
         var data = this.data,
             fileList = data.fileList;
@@ -424,91 +412,6 @@ var UploadCard = UploadBase.extend({
         }
         
         filesBanner.style.left = '20px';
-    },
-    
-    preCheck: function(file) {
-        var preCheckInfo = '';
-        if (!this.isAcceptedFileSize(file)) {
-            preCheckInfo = '文件过大';
-        }
-        if (!this.isAcceptedFileType(file)) {
-            preCheckInfo = '格式错误';
-        }
-        return preCheckInfo;
-    },
-    
-    isAcceptedFileType: function(file) {
-        var data = this.data,
-            accept = data.accept,
-            type = this.getFileType(file).toLowerCase(),
-            isValid = false;
-
-        accept.split(',').forEach(function(cond) {
-            if ('*' === cond) {
-                isValid = true;
-            } else if (/image\/.*/.test(cond)) {
-                isValid = isValid || type === 'image';
-            } else if (/audio\/.*/.test(cond)) {
-                isValid = isValid || type === 'audio';
-            } else if (/video\/.*/.test(cond)) {
-                isValid = isValid || type === 'video';
-            } else {
-                isValid = isValid || type === Config.typeMap[cond];
-            }
-        });
-
-        return isValid;
-    },
-    
-    getFileType: function(file) {
-        var type = file.type || '',
-            name = file.name || '';
-
-        if (/image\/.*/.test(type)
-            || /jpg|gif|jpeg|png/i.test(name)
-        ) {
-            return 'IMAGE';
-        } else if (/zip|rar|gz/i.test(name)) {
-            return 'ZIP';
-        } else if (/document|sheet|powerpoint|msword/.test(type)
-                || /doc|xlsx|ppt/i.test(name)
-        ) {
-            return 'DOC';
-        } else if (/video\/.*/.test(type)
-                || /mp4|mkv|rmvb/i.test(name)
-        ) {
-            return 'VIDEO';
-        } else if (/audio\/.*/.test(type)
-                || /mp3/i.test(name)
-        ) {
-            return 'AUDIO';
-        } else if (/text\/plain/.test(type)) {
-            return 'TEXT';
-        } else if (/text\/html/.test(type)) {
-            return 'HTML';
-        } else if (/application\/pdf/.test(type)) {
-            return 'PDF';
-        } else if (/application\/javascript/.test(type)) {
-            return 'JS';
-        }
-
-        return 'UNKNOWN';
-    },
-    
-    isAcceptedFileSize: function(file) {
-        var data = this.data,
-            maxSize = data.maxSize,
-            fileSize = file.size;
-        
-        var patterns = maxSize.match(/(\d+)(\D+)?/i);
-        var size = patterns[1];
-        var unit = patterns[2];
-
-        if (unit) {
-            size *= Config.sizeMap[unit.toUpperCase()];
-        }
-
-        return size >= fileSize;
     }
 });
 
