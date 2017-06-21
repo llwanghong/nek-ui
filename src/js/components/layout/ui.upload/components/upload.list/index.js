@@ -5,9 +5,9 @@
  */
 'use strict';
 
-var Component = require('../../../../../ui-base/component');
 var _ = require('../../../../../ui-base/_');
 var FileUnit = require('../file.unit');
+var UploadBase = require('../upload.base');
 var ImagePreview = require('../image.preview');
 var Config = require('../../config');
 var tpl = require('./index.html');
@@ -26,7 +26,7 @@ var tpl = require('./index.html');
  * @param {number}         [options.data.numPerline]       => 可选，每行展示的文件个数
  * @param {number}         [options.data.maxSize]          => 可选，上传文件大小的最大允许值
  */
-var UploadList = Component.extend({
+var UploadList = UploadBase.extend({
     name: 'upload.list',
     template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
     config: function(data) {
@@ -54,45 +54,15 @@ var UploadList = Component.extend({
     },
     
     init: function(data) {
-        this.initData();
+        this.initFilesWrapper();
         this.supr(data);
     },
 
-    initData: function() {
-        this.initFilesWrapper();
-        this.initUploadedFileUnits();
-    },
-    
     initFilesWrapper: function() {
         var inputWrapper = this.data.inputWrapper = this.$refs.inputwrapper;
         var filesWrapper = this.data.filesWrapper = this.$refs.fileswrapper;
         filesWrapper.appendChild(inputWrapper);
         inputWrapper.style.display = 'inline-block';
-    },
-    
-    initUploadedFileUnits: function() {
-        var self = this,
-            data = this.data;
-        
-        if (data.fileList.length > 0) {
-            var fileList = data.fileList.splice(0);
-            fileList.forEach(function(file) {
-                var fileunit = self.createFileUnit({
-                    file: file,
-                    options: {}
-                });
-
-                data.fileList.push({
-                    inst: fileunit
-                });
-            });
-
-            this.updateFileList();
-        }
-    },
-    
-    fileDialogOpen: function() {
-        this.$refs.file.click();
     },
     
     fileSelect: function() {
