@@ -4,7 +4,8 @@
             <div ref="filesentry" class="m-entry">
                 {#if fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type === 'IMAGE'}
                     <div class="m-img-wrapper">
-                        <img class="u-img" src={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.src} alt={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.name}/>
+                        <img class="u-img" src={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.src}
+                             alt={fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.name}/>
                     </div>
                 {#elseif fileList[fileList.length - 1] && fileList[fileList.length - 1].inst.data.type === 'ZIP'}
                     <span class="u-txt">ZIP</span>
@@ -31,7 +32,8 @@
                 </div>
                 <span class="u-info">{fileList.length}</span>
                 <span ref="filesbanner" class="u-banner" r-class={{'top': isTopBanner}}></span>
-                <ul ref="fileswrapper" class="m-filelist" on-click={this.toggle(true, $event)} r-hide={fileList.length === 0} r-style={{width: fileListWidth + 'px'}}></ul>
+                <ul ref="fileswrapper" class="m-filelist" on-click={this.toggle(true, $event)}
+                    r-hide={fileList.length === 0} r-style={{width: fileListWidth + 'px'}}></ul>
             </div>
             <div class="m-entry-info">{info}</div>
         </div>
@@ -39,7 +41,9 @@
             {#if this.$body}
                 {#inc this.$body}
             {#else}
-                <div class="u-input-btn"><span class="u-input-content"><i class="u-icon u-icon-plus"></i>上传文件</span></div>
+                <div class="u-input-btn" on-drop={this.onDrop($event)} on-dragenter={this.onDragEnter($event)} on-dragover={this.onDragOver($event)}>
+                    <span class="u-input-content"><i class="u-icon u-icon-plus"></i>上传文件</span>
+                </div>
                 <div class="u-input-info">{preCheckInfo}</div>
             {/if}
         </div>

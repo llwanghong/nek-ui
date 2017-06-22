@@ -64,6 +64,26 @@ var UploadList = UploadBase.extend({
         filesWrapper.appendChild(inputWrapper);
         inputWrapper.style.display = 'inline-block';
     },
+
+    onDragEnter: function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    },
+
+    onDragOver: function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    },
+
+    onDrop: function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var dt = e.event && e.event.dataTransfer;
+        var files = dt.files;
+         
+        return files;
+    },
     
     fileSelect: function() {
         var data = this.data,

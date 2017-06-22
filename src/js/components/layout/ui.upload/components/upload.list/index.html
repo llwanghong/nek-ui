@@ -2,6 +2,7 @@
     <ul ref="fileswrapper" class="m-filelist" r-style={{width: fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1) + 'px'}}></ul>
     <form method="POST" action={url} target="iframe{_id}" enctype={encType} ref="form">
         <input type="file" name={name} ref="file" multiple={multiple ? 'multiple' : ''} accept={accept} r-hide={true} on-change={this.fileSelect()}>
+
         {#list Object.keys(data) as key}
             <input type="hidden" name={key} value={data[key]}>
         {/list}
@@ -10,7 +11,7 @@
         {#if this.$body}
             {#inc this.$body}
         {#else}
-            <div class="u-input-btn"><span class="u-input-content"><i class="u-icon u-icon-plus"></i>上传文件</span></div>
+            <div class="u-input-btn" on-drop={this.onDrop($event)} on-dragenter={this.onDragEnter($event)} on-dragover={this.onDragOver($event)}><span class="u-input-content"><i class="u-icon u-icon-plus"></i>上传文件</span></div>
             <div class="u-input-info">{preCheckInfo}</div>
         {/if}
     </li>

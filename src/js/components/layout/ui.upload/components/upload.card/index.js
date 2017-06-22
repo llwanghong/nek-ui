@@ -72,6 +72,26 @@ var UploadCard = UploadBase.extend({
         data.fileListWidth = fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1);
     },
 
+    onDragEnter: function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    },
+    
+    onDragOver: function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    },
+    
+    onDrop: function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    
+        var dt = e.event && e.event.dataTransfer;
+        var files = dt.files;
+        
+        return files;
+    },
+
     fileSelect: function() {
         var data = this.data,
             inputNode = this.$refs.file,
