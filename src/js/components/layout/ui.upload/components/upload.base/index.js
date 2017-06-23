@@ -67,12 +67,13 @@ var UploadBase = Component.extend({
         if (data.fileList.length > 0) {
             var fileList = data.fileList.splice(0);
             fileList.forEach(function(file) {
-                file.deleted = false;
                 var fileunit = self.createFileUnit({
                     file: file,
                     options: {},
                     deletable: data.deletable
                 });
+                
+                fileunit.flag = 'ORIGINAL';
 
                 data.fileUnitList.push({
                     inst: fileunit
@@ -93,13 +94,14 @@ var UploadBase = Component.extend({
 
         fileUnitList = data.fileUnitList = data.fileUnitList.filter(function(item) {
             var inst = item.inst,
-                deleted = inst.deleted,
+                flag = inst.flag,
                 file = inst.file,
                 destroyed = inst.destroyed;
 
             // item.inst = {};
             
-            if (deleted) {
+            if (flag === 'DELETED') {
+                file.flag = 'DELETED';
                 fileDeletedList.push(file);
                 return false;
             }
@@ -114,25 +116,21 @@ var UploadBase = Component.extend({
 
         fileList.splice(0);
         fileUnitList.forEach(function(item) {
-            var data = item.inst.data,
-                file = data.file || {},
-                fileItem = {
-                    name: file.name,
-                    url: file.url
-                };
+            var inst = item.inst,
+                file = inst.data.file || {};
             
-            if (file.deleted != undefined) {
-                fileItem.deleted = file.deleted;
-            }
-
-            fileList.push(fileItem);
+            fileList.push({
+                name: file.name,
+                url: file.url,
+                flag: Config.flagMap[inst.flag]
+            });
         });
         
         fileDeletedList.forEach(function(file) {
             fileList.push({
                 name: file && file.name,
                 url: file && file.url,
-                deleted: file && file.deleted
+                flag: file && Config.flagMap[file.flag]
             });
         });
     },

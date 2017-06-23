@@ -34,7 +34,14 @@ var typeMap = {
     '.txt': 'text'
 };
 
+var flagMap = {
+    ADDED: 0,
+    ORIGINAL: 1,
+    DELETED: 2
+};
+
 module.exports = {
     sizeMap: sizeMap,
-    typeMap: typeMap
+    typeMap: typeMap,
+    flagMap: flagMap
 };

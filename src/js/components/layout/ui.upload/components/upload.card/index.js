@@ -101,6 +101,7 @@ var UploadCard = UploadBase.extend({
                     options: options,
                     deletable: data.deletable
                 });
+                fileunit.flag = 'ADDED';
                 data.fileUnitList.push({
                     inst: fileunit
                 });
@@ -241,11 +242,9 @@ var UploadCard = UploadBase.extend({
         });
         
         fileunit.$on('delete', function() {
-            var file = this.data.file;
-            if (file.deleted !== undefined) {
-                this.deleted = true;
-                this.file = file;
-                file.deleted = true;
+            if (this.flag === 'ORIGINAL') {
+                this.flag = 'DELETED';
+                this.file = this.data.file;
             }
             this.destroy();
         });
