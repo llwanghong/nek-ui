@@ -85,17 +85,28 @@ var UploadCard = UploadBase.extend({
     onDrop: function(e) {
         e.stopPropagation();
         e.preventDefault();
-    
+
+        if (!this.data.drag) {
+            return;
+        }
+
         var dt = e.event && e.event.dataTransfer;
         var files = dt.files;
-        
-        return files;
+
+        this.handleFiles(files);
     },
 
     fileSelect: function() {
+        var inputNode = this.$refs.file,
+            files = inputNode.files;
+        
+        this.handleFiles(files);
+        
+        inputNode.value = '';
+    },
+    
+    handleFiles: function(files) {
         var data = this.data,
-            inputNode = this.$refs.file,
-            files = inputNode.files,
             index = 0,
             len = files.length,
             file, fileunit, options;
@@ -123,8 +134,6 @@ var UploadCard = UploadBase.extend({
                 this.updateFilesZone();
             }
         }
-        
-        inputNode.value = '';
         
         this.updateFileList();
     },

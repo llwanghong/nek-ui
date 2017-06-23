@@ -79,22 +79,33 @@ var UploadList = UploadBase.extend({
         e.stopPropagation();
         e.preventDefault();
 
+        if (!this.data.drag) {
+            return;
+        }
+        
         var dt = e.event && e.event.dataTransfer;
         var files = dt.files;
-         
-        return files;
+
+        this.handleFiles(files);
     },
     
     fileSelect: function() {
+        var inputNode = this.$refs.file,
+            files = inputNode.files;
+        
+        this.handleFiles(files);
+        
+        inputNode.value = '';
+    },
+
+    handleFiles: function(files) {
         var data = this.data,
-            inputNode = this.$refs.file,
-            files = inputNode.files,
             index = 0,
             len = files.length,
             file, fileunit, options;
 
         options = this.setOptions(data);
-        
+
         data.preCheckInfo = '';
 
         for (; index < len; index++) {
@@ -114,11 +125,9 @@ var UploadList = UploadBase.extend({
             }
         }
 
-        inputNode.value = '';
-        
         this.updateFileList();
     },
-    
+
     createFileUnit: function(data) {
         var self = this,
             imagePreview = this.$refs.imagepreview,
