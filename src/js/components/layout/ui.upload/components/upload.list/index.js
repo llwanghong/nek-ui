@@ -5,7 +5,6 @@
  */
 'use strict';
 
-var _ = require('../../../../../ui-base/_');
 var FileUnit = require('../file.unit');
 var UploadBase = require('../upload.base');
 var ImagePreview = require('../image.preview');
@@ -19,12 +18,6 @@ var UploadList = UploadBase.extend({
     name: 'upload.list',
     template: tpl.replace(/([>}])\s*([<{])/g, '$1$2'),
     config: function(data) {
-        _.extend(data, {
-            fileList: [],
-            fileUnitWidth: 50,
-            fileUnitMargin: 25
-        });
-        
         this.supr(data);
     },
     
@@ -84,7 +77,7 @@ var UploadList = UploadBase.extend({
         data.preCheckInfo = '';
 
         for (; index < len; index++) {
-            if (data.fileList.length < data.numLimit) {
+            if (data.fileUnitList.length < data.numLimit) {
                 file = files[index];
                 data.preCheckInfo = this.preCheck(file);
                 if (data.preCheckInfo) {
@@ -95,7 +88,7 @@ var UploadList = UploadBase.extend({
                     options: options,
                     deletable: data.deletable
                 });
-                data.fileList.push({
+                data.fileUnitList.push({
                     inst: fileunit
                 });
             }
@@ -123,7 +116,7 @@ var UploadList = UploadBase.extend({
                 return img.inst;
             }
             
-            var imgList = self.data.fileList.filter(filterImgFile).map(mapHelper);
+            var imgList = self.data.fileUnitList.filter(filterImgFile).map(mapHelper);
             
             var preview = createImagePreview(imgList);
             
@@ -158,7 +151,7 @@ var UploadList = UploadBase.extend({
                     imgInst = imgFileList[index];
 
                 if (imgInst) {
-                    imgInst.destroy();
+                    imgInst.$emit('delete');
                 }
             });
             
@@ -169,9 +162,22 @@ var UploadList = UploadBase.extend({
             return imagePreview;
         }
         
-        fileunit.$on('delete', function() {
-            this.destroy();
+        fileunit.$on('onload', function() {
             self.updateFileList();
+        });
+        
+        fileunit.$on('success', function() {
+            self.updateFileList();
+        });
+        
+        fileunit.$on('delete', function() {
+            var file = this.data.file;
+            if (file.deleted !== undefined) {
+                this.deleted = true;
+                this.file = file;
+                file.deleted = true;
+            }
+            this.destroy();
         });
         
         fileunit.$on('$destroy', function() {
@@ -220,7 +226,7 @@ var UploadList = UploadBase.extend({
             numPerline = data.numPerline,
             numLimit = data.numLimit,
             fileUnitMargin = data.fileUnitMargin,
-            length = data.fileList.length;
+            length = data.fileUnitList.length;
 
         if (length < numLimit) {
             filesWrapper.appendChild(inputWrapper);

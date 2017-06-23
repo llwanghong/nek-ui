@@ -23,10 +23,7 @@ var UploadCard = UploadBase.extend({
         _.extend(data, {
             status: 'uploaded',
             info: '',
-            fileList: [],
-            fileUnitWidth: 50,
-            fileUnitMargin: 25,
-            fileListPadding: 22
+            fileUnitListPadding: 22
         });
         
         this.supr(data);
@@ -44,7 +41,7 @@ var UploadCard = UploadBase.extend({
             fileUnitMargin = data.fileUnitMargin;
 
         data.filesWrapper = this.$refs.fileswrapper;
-        data.fileListWidth = fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1);
+        data.fileUnitListWidth = fileUnitWidth * numPerline + fileUnitMargin * (numPerline - 1);
     },
 
     onDragEnter: function(e) {
@@ -93,7 +90,7 @@ var UploadCard = UploadBase.extend({
         data.preCheckInfo = '';
 
         for (; index < len; index++) {
-            if (data.fileList.length < data.numLimit) {
+            if (data.fileUnitList.length < data.numLimit) {
                 file = files[index];
                 data.preCheckInfo = this.preCheck(file);
                 if (data.preCheckInfo) {
@@ -104,7 +101,7 @@ var UploadCard = UploadBase.extend({
                     options: options,
                     deletable: data.deletable
                 });
-                data.fileList.push({
+                data.fileUnitList.push({
                     inst: fileunit
                 });
                 this.updateFilesZone();
@@ -120,11 +117,11 @@ var UploadCard = UploadBase.extend({
             entryWrapper = this.$refs.entrywrapper,
             inputWrapper = this.$refs.inputwrapper;
         
-        if (data.fileList.length < data.numLimit) {
+        if (data.fileUnitList.length < data.numLimit) {
             filesZone.style.width = '125px';
             entryWrapper.style['margin-right'] = '20px';
             inputWrapper.style.display = 'inline-block';
-        } else if (data.fileList.length == data.numLimit) {
+        } else if (data.fileUnitList.length == data.numLimit) {
             filesZone.style.width = '50px';
             entryWrapper.style['margin-right'] = '0';
             inputWrapper.style.display = 'none';
@@ -152,7 +149,7 @@ var UploadCard = UploadBase.extend({
                 return img.inst;
             }
             
-            var imgList = self.data.fileList.filter(filterImgFile).map(mapHelper);
+            var imgList = self.data.fileUnitList.filter(filterImgFile).map(mapHelper);
             
             var preview = createImagePreview(imgList);
             
@@ -187,7 +184,7 @@ var UploadCard = UploadBase.extend({
                     imgInst = imgFileList[index];
 
                 if (imgInst) {
-                    imgInst.destroy();
+                    imgInst.$emit('delete');
                 }
             });
             
@@ -206,7 +203,7 @@ var UploadCard = UploadBase.extend({
                 curIndex = -1,
                 lastIndex = -1;
 
-            self.data.fileList.forEach(function(item, index) {
+            self.data.fileUnitList.forEach(function(item, index) {
                 if (item.inst.data.status === 'uploading') {
                     lastIndex = index;
                 }
@@ -222,17 +219,19 @@ var UploadCard = UploadBase.extend({
             }
         }
 
+        fileunit.$on('onload', successCb);
         fileunit.$on('success', successCb);
         
         function successCb() {
             var allUploaded = true;
-            self.data.fileList.forEach(function(item) {
+            self.data.fileUnitList.forEach(function(item) {
                 allUploaded &= item.inst.data.status === 'uploaded';
             });
             if (allUploaded) {
                 self.data.status = 'uploaded';
                 self.$update();
             }
+            self.updateFileList();
         }
 
         fileunit.$on('error', function() {
@@ -242,8 +241,13 @@ var UploadCard = UploadBase.extend({
         });
         
         fileunit.$on('delete', function() {
+            var file = this.data.file;
+            if (file.deleted !== undefined) {
+                this.deleted = true;
+                this.file = file;
+                file.deleted = true;
+            }
             this.destroy();
-            self.updateFileList();
         });
         
         fileunit.$on('$destroy', function() {
@@ -295,12 +299,12 @@ var UploadCard = UploadBase.extend({
     
     uploadFiles: function() {
         var data = this.data,
-            fileList = data.fileList;
+            fileUnitList = data.fileUnitList;
         
         data.status = 'uploaded';
         data.info = '';
         
-        fileList.forEach(function(item) {
+        fileUnitList.forEach(function(item) {
             var inst = item.inst,
                 data = inst.data;
             

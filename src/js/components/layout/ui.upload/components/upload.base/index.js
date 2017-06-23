@@ -36,6 +36,7 @@ var UploadBase = Component.extend({
             drag: false,
             accept: '*',
             listType: 'list',
+            fileList: [],
             data: {},
             numLimit: 10,
             numPerline: 5,
@@ -45,7 +46,8 @@ var UploadBase = Component.extend({
         });
         
         _.extend(data, {
-            fileList: [],
+            fileUnitList: [],
+            fileDeletedList: [],
             fileUnitWidth: 50,
             fileUnitMargin: 25
         });
@@ -65,13 +67,14 @@ var UploadBase = Component.extend({
         if (data.fileList.length > 0) {
             var fileList = data.fileList.splice(0);
             fileList.forEach(function(file) {
+                file.deleted = false;
                 var fileunit = self.createFileUnit({
                     file: file,
                     options: {},
                     deletable: data.deletable
                 });
 
-                data.fileList.push({
+                data.fileUnitList.push({
                     inst: fileunit
                 });
             });
@@ -84,16 +87,47 @@ var UploadBase = Component.extend({
         var self = this,
             data = this.data,
             filesWrapper = data.filesWrapper,
-            fileList;
+            fileList = data.fileList,
+            fileDeletedList = data.fileDeletedList,
+            fileUnitList;
 
-        fileList = data.fileList = data.fileList.filter(function(item) {
-            return !item.inst.destroyed;
+        fileUnitList = data.fileUnitList = data.fileUnitList.filter(function(item) {
+            var inst = item.inst,
+                deleted = inst.deleted,
+                file = inst.file,
+                destroyed = inst.destroyed;
+
+            // item.inst = {};
+            
+            if (deleted) {
+                fileDeletedList.push(file);
+                return false;
+            }
+            return !destroyed;
         });
 
         filesWrapper.innerHTML = '';
-        fileList.forEach(function(item, index) {
+        fileUnitList.forEach(function(item, index) {
             var wrapper = item.wrapper = self.createFileUnitWrapper(filesWrapper, index);
             item.inst.$inject(wrapper);
+        });
+
+        fileList.splice(0);
+        fileUnitList.forEach(function(item) {
+            var data = item.inst.data;
+
+            fileList.push({
+                name: data.file && data.file.name,
+                url: data.file && data.file.url
+            });
+        });
+        
+        fileDeletedList.forEach(function(file) {
+            fileList.push({
+                name: file && file.name,
+                url: file && file.url,
+                deleted: file && file.deleted
+            });
         });
     },
     
