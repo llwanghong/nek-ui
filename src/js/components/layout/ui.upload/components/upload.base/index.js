@@ -114,12 +114,18 @@ var UploadBase = Component.extend({
 
         fileList.splice(0);
         fileUnitList.forEach(function(item) {
-            var data = item.inst.data;
+            var data = item.inst.data,
+                file = data.file || {},
+                fileItem = {
+                    name: file.name,
+                    url: file.url
+                };
+            
+            if (file.deleted != undefined) {
+                fileItem.deleted = file.deleted;
+            }
 
-            fileList.push({
-                name: data.file && data.file.name,
-                url: data.file && data.file.url
-            });
+            fileList.push(fileItem);
         });
         
         fileDeletedList.forEach(function(file) {
