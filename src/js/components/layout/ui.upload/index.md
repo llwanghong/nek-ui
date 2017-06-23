@@ -4,23 +4,23 @@ title: 上传组件
 
 ## 代码演示
 
-### 基本展示形式（列表形式）
+### 基本展示形式（列表形式）, 用于表单上传
 
 <!-- demo_start -->
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload'></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload'></kl-upload>
 ```
 <!-- demo_end -->
 
-### 卡片展示形式
+### 卡片展示形式，用于表格上传
 
 <!-- demo_start -->
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload' list-type="card"></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload' list-type="card"></kl-upload>
 ```
 <!-- demo_end -->
 
@@ -30,7 +30,7 @@ title: 上传组件
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload' multiple={true}></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload' multiple={true}></kl-upload>
 ```
 <!-- demo_end -->
 
@@ -40,7 +40,7 @@ title: 上传组件
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload' list-type="card" multiple={true}></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload' list-type="card" multiple={true}></kl-upload>
 ```
 <!-- demo_end -->
 
@@ -50,7 +50,7 @@ title: 上传组件
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload' file-list={list} accept=".jpg,.zip,video/*,audio/*"></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload' file-list={list} accept=".jpg,.zip,video/*,audio/*"></kl-upload>
 ```
 <!-- demo_end -->
 
@@ -60,7 +60,7 @@ title: 上传组件
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload' max-size="830M"></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload' max-size="830M"></kl-upload>
 ```
 <!-- demo_end -->
 
@@ -70,7 +70,7 @@ title: 上传组件
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload' multiple={true} num-limit={15} num-perline={4}></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload' multiple={true} num-limit={15} num-perline={4}></kl-upload>
 ```
 <!-- demo_end -->
 
@@ -80,7 +80,7 @@ title: 上传组件
 <div class="m-example"></div>
 
 ```xml
-<ui.upload action='http://10.240.180.98:3000/upload' file-list={list}></ui.upload>
+<kl-upload action='http://10.240.180.98:3000/upload' file-list={list}></kl-upload>
 ```
 
 ```javascript

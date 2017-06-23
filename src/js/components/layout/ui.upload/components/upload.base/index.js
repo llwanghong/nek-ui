@@ -12,7 +12,7 @@ var _ = require('../../../../../ui-base/_');
 var Config = require('../../config');
 
 /**
- * @class UploadList
+ * @class UploadBase
  * @extend Component
  * @param {object}         [options.data]                  = 绑定属性
  * @param {string}         [options.data.action]           => 必选，上传地址
