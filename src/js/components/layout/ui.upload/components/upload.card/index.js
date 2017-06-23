@@ -101,7 +101,8 @@ var UploadCard = UploadBase.extend({
                 }
                 fileunit = this.createFileUnit({
                     file: file,
-                    options: options
+                    options: options,
+                    deletable: data.deletable
                 });
                 data.fileList.push({
                     inst: fileunit

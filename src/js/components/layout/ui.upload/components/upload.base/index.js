@@ -24,6 +24,7 @@ var Config = require('../../config');
  * @param {number}         [options.data.numLimit]         => 可选，最大允许上传文件的个数
  * @param {number}         [options.data.numPerline]       => 可选，每行展示的文件个数
  * @param {number}         [options.data.maxSize]          => 可选，上传文件大小的最大允许值
+ * @param {boolean}        [options.data.deletable]        => 可选，是否支持文件删除
  */
 var UploadBase = Component.extend({
     name: 'upload.list',
@@ -39,6 +40,7 @@ var UploadBase = Component.extend({
             numLimit: 10,
             numPerline: 5,
             maxSize: Config.sizeMap.GB,
+            deletable: true,
             encType: 'multipart/form-data'
         });
         
@@ -65,7 +67,8 @@ var UploadBase = Component.extend({
             fileList.forEach(function(file) {
                 var fileunit = self.createFileUnit({
                     file: file,
-                    options: {}
+                    options: {},
+                    deletable: data.deletable
                 });
 
                 data.fileList.push({

@@ -24,6 +24,7 @@ var FileUnit = Component.extend({
         _.extend(data, {
             info: '',
             status: '',
+            deletable: true,
             delConfirm: false
         });
 
