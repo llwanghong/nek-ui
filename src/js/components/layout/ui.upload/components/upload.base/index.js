@@ -80,6 +80,23 @@ var UploadBase = Component.extend({
         }
     },
     
+    updateFileList: function() {
+        var self = this,
+            data = this.data,
+            filesWrapper = data.filesWrapper,
+            fileList;
+
+        fileList = data.fileList = data.fileList.filter(function(item) {
+            return !item.inst.destroyed;
+        });
+
+        filesWrapper.innerHTML = '';
+        fileList.forEach(function(item, index) {
+            var wrapper = item.wrapper = self.createFileUnitWrapper(filesWrapper, index);
+            item.inst.$inject(wrapper);
+        });
+    },
+    
     fileDialogOpen: function() {
         this.$refs.file && this.$refs.file.click();
     },

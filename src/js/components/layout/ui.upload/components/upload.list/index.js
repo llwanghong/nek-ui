@@ -183,23 +183,8 @@ var UploadList = UploadBase.extend({
     },
 
     updateFileList: function() {
-        var self = this,
-            data = this.data,
-            filesWrapper = data.filesWrapper,
-            fileList;
-       
-        fileList = data.fileList = data.fileList.filter(function(item) {
-            return !item.inst.destroyed;
-        });
-        
-        filesWrapper.innerHTML = '';
-        fileList.forEach(function(item, index) {
-            var wrapper = item.wrapper = self.createFileUnitWrapper(filesWrapper, index);
-            item.inst.$inject(wrapper);
-        });
-        
+        this.supr();
         this.appendInputWrapper();
-        
         this.$update();
     },
     

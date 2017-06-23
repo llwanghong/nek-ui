@@ -110,6 +110,8 @@ var FileUnit = Component.extend({
                 }
             },
             onload: function(e) {
+                var response = e.target && JSON.parse(e.target.responseText);
+                self.data.file.url = response.url;
                 self.$emit('onload', { info: e });
             },
             onerror: function(e) {
